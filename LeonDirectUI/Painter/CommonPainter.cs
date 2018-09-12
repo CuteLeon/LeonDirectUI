@@ -22,25 +22,13 @@ namespace LeonDirectUI.Painter
         /// <summary>
         /// 绘制方法
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="control"></param>
-        public void Paint(Graphics graphics, ControlBase control)
-        {
-            if (graphics == null) throw new Exception("绘制器使用了空的 Graphics");
-            if (control == null) throw new Exception("绘制器绘制空的 ControlBase");
-
-            //TODO: 实现绘制方法逻辑
-        }
-
-        /// <summary>
-        /// 绘制方法
-        /// </summary>
         /// <param name="control"></param>
         public void Paint(ControlBase control)
         {
             if (Graphics == null) throw new Exception("绘制器使用了空的 Graphics");
+            if (control == null) throw new Exception("绘制器绘制空的 ControlBase");
 
-            Paint(Graphics, control);
+            //TODO: 实现绘制方法逻辑
         }
 
         /// <summary>
@@ -49,9 +37,7 @@ namespace LeonDirectUI.Painter
         /// <param name="graphics"></param>
         public void SetGraphics(Graphics graphics)
         {
-            if (graphics == null) throw new Exception("向绘制器注入空的 Graphics");
-
-            Graphics = graphics;
+            Graphics = graphics ?? throw new Exception("向绘制器注入空的 Graphics");
         }
     }
 }

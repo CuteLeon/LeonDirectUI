@@ -235,21 +235,29 @@ namespace LeonDirectUI.Control
         /// <param name="painter"></param>
         public void SetPainter(IPaint painter)
         {
-            if (painter != null) throw new Exception("注入绘制器");
-
-            Painter = painter;
+            Painter = painter ?? throw new Exception("注入空的绘制器");
         }
 
         /// <summary>
-        /// 调用绘制器
+        /// 调用绘制器绘制
         /// </summary>
-        /// <param name="graphics"></param>
-        public void Paint(Graphics graphics)
+        /// <param name="painter"></param>
+        [Obsolete("这是调试用方法，请直接使用 Paint() 方法调用 SetPainter() 方法已经注入的 IPaint 对象绘制", false)]
+        public void Paint(IPaint painter)
+        {
+            if (painter == null) throw new Exception("Painter 对象为空");
+
+            painter.Paint(this);
+        }
+
+        /// <summary>
+        /// 绘制
+        /// </summary>
+        public void Paint()
         {
             if (Painter == null) throw new Exception("Painter 对象为空");
-            if (graphics == null) throw new Exception("Graphics 对象为空");
 
-            Painter.Paint(graphics, this);
+            Painter.Paint(this);
         }
 
         #endregion

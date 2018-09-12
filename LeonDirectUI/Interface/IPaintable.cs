@@ -19,9 +19,15 @@ namespace LeonDirectUI.Interface
         void SetPainter(IPaint painter);
 
         /// <summary>
+        /// 绘制
+        /// </summary>
+        void Paint();
+
+        /// <summary>
         /// 调用绘制器绘制
         /// </summary>
-        void Paint(Graphics graphics);
+        /// <param name="painter"></param>
+        void Paint(IPaint painter);
 
     }
 }
