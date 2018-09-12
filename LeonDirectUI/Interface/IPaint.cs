@@ -1,4 +1,4 @@
-﻿using LeonDirectUI.Control;
+﻿using LeonDirectUI.DUIControl;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

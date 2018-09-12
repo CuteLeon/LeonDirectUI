@@ -16,6 +16,11 @@ namespace LeonDirectUI.Interface
         #region 容器访问方法
 
         /// <summary>
+        /// 鼠标状态
+        /// </summary>
+        MouseStates MouseState { get; set; }
+
+        /// <summary>
         /// 点击
         /// </summary>
         /// <param name="e"></param>

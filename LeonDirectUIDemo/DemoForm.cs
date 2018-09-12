@@ -1,4 +1,8 @@
-﻿using System;
+﻿using LeonDirectUI.Container;
+using LeonDirectUI.DUIControl;
+using LeonDirectUI.Interface;
+using LeonDirectUI.Painter;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,7 +23,21 @@ namespace LeonDirectUIDemo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            IPaint painter = new CommonPainter();
+            ContainerBase container = new ContainerBase();
+            ControlBase control_0 = new ControlBase();
+            ControlBase control_1 = new ControlBase();
+            ControlBase control_2 = new ControlBase();
+
+            container.SetContainer(this);
+            painter.SetGraphics(this.CreateGraphics());
+            control_0.SetPainter(painter);
+            control_1.SetPainter(painter);
+            control_2.SetPainter(painter);
+
+            control_0.Paint();
+            control_1.Paint();
+            control_2.Paint();
         }
     }
 }

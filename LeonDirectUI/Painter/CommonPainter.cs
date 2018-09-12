@@ -1,4 +1,4 @@
-﻿using LeonDirectUI.Control;
+﻿using LeonDirectUI.DUIControl;
 using LeonDirectUI.Interface;
 using System;
 using System.Collections.Generic;
@@ -29,6 +29,7 @@ namespace LeonDirectUI.Painter
             if (control == null) throw new Exception("绘制器绘制空的 ControlBase");
 
             //TODO: 实现绘制方法逻辑
+            Console.WriteLine($"{this.ToString()} 绘制 {control.ToString()} ...");
         }
 
         /// <summary>

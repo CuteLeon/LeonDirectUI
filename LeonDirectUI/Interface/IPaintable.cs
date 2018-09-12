@@ -13,6 +13,11 @@ namespace LeonDirectUI.Interface
     public interface IPaintable
     {
         /// <summary>
+        /// 绘制器
+        /// </summary>
+        IPaint Painter { get; set; }
+
+        /// <summary>
         /// 注入绘制器
         /// </summary>
         /// <param name="painter"></param>

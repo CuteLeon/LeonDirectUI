@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Control\ControlBase.cs" />
-    <Compile Include="Control\ControlMouseable.cs" />
+    <Compile Include="Container\ContainerBase.cs" />
+    <Compile Include="DUIControl\ControlBase.cs" />
+    <Compile Include="DUIControl\ControlMouseable.cs" />
+    <Compile Include="Interface\IContainer.cs" />
     <Compile Include="Interface\IMouseable.cs" />
     <Compile Include="Interface\IPaint.cs" />
     <Compile Include="Interface\IPaintable.cs" />
