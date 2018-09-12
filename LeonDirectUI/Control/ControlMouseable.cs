@@ -11,8 +11,7 @@ namespace LeonDirectUI.Control
 {
     public class ControlMouseable : ControlBase, IMouseable
     {
-        //TODO: 鼠标状态改变调用绘制方法
-
+        
         private MouseStates mouseState = MouseStates.Normal;
         /// <summary>
         /// 鼠标状态
@@ -25,7 +24,7 @@ namespace LeonDirectUI.Control
                 if (mouseState != value)
                 {
                     mouseState = value;
-                    //重新绘制
+                    //鼠标状态改变调用绘制方法
                     Painter?.Paint(this);
                 }
             }

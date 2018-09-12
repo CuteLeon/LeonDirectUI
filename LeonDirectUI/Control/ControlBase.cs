@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 //TODO: 设计一个抽象容器类作为 DirectUI 控件的容器，由使用者继承并实现，用于注册和维护控件并绘制 DirectUI 控件；为控件注入控制器之前，需要先将物理容器的CreateGraphics()注入到绘制器；
+//TODO: 再完成一个用于支持 ControlMouseable 的绘制器，将通用绘制器和Mouseable绘制器分别注入ControlBase和ControlMouseable类型对象；
 
 namespace LeonDirectUI.Control
 {
@@ -92,7 +93,6 @@ namespace LeonDirectUI.Control
         #endregion
 
         #region 区域
-        //TODO: 每次区域发生变动需要调用绘制方法
 
         /// <summary>
         /// 区域 (核心)
@@ -102,22 +102,54 @@ namespace LeonDirectUI.Control
         /// <summary>
         /// 左坐标
         /// </summary>
-        public virtual int Left { get => Papa.X; set => Papa.X = value; }
+        public virtual int Left
+        {
+            get => Papa.X;
+            set
+            {
+                Papa.X = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 上坐标
         /// </summary>
-        public virtual int Top { get => Papa.Y; set => Papa.Y = value; }
+        public virtual int Top
+        {
+            get => Papa.Y;
+            set
+            {
+                Papa.Y = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 宽度
         /// </summary>
-        public virtual int Width { get => Papa.Width; set => Papa.Width = value; }
+        public virtual int Width
+        {
+            get => Papa.Width;
+            set
+            {
+                Papa.Width = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 高度
         /// </summary>
-        public virtual int Height { get => Papa.Height; set => Papa.Height = value; }
+        public virtual int Height
+        {
+            get => Papa.Height;
+            set
+            {
+                Papa.Height = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 右边界
@@ -132,17 +164,41 @@ namespace LeonDirectUI.Control
         /// <summary>
         /// 显示区域
         /// </summary>
-        public virtual Rectangle Rectangle { get => Papa; set => Papa = value; }
+        public virtual Rectangle Rectangle
+        {
+            get => Papa;
+            set
+            {
+                Papa = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 控件尺寸
         /// </summary>
-        public virtual Size Size { get => Papa.Size; set => Papa.Size = value; }
+        public virtual Size Size
+        {
+            get => Papa.Size;
+            set
+            {
+                Papa.Size = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 控件坐标
         /// </summary>
-        public virtual Point Location { get => Papa.Location; set => Papa.Location = value; }
+        public virtual Point Location
+        {
+            get => Papa.Location;
+            set
+            {
+                Papa.Location = value;
+                Painter?.Paint(this);
+            }
+        }
 
         /// <summary>
         /// 设置边界
@@ -157,6 +213,8 @@ namespace LeonDirectUI.Control
             Papa.Y = top;
             Papa.Width = width;
             Papa.Height = height;
+            
+            Painter?.Paint(this);
         }
 
         /// <summary>
@@ -168,6 +226,8 @@ namespace LeonDirectUI.Control
         {
             Papa.Width = width;
             Papa.Height = height;
+            
+            Painter?.Paint(this);
         }
 
         /// <summary>
@@ -179,6 +239,8 @@ namespace LeonDirectUI.Control
         {
             Papa.X = left;
             Papa.Y = Height;
+            
+            Painter?.Paint(this);
         }
 
         #endregion
@@ -194,17 +256,25 @@ namespace LeonDirectUI.Control
         public virtual bool Contains(int x, int y) => Papa.Contains(x, y);
 
         /// <summary>
-        /// 将区域方法指定量
+        /// 将区域放大指定量
         /// </summary>
         /// <param name="width">放大宽度</param>
         /// <param name="height">放大高度</param>
-        public virtual void Inflate(int width, int height) => Papa.Inflate(width, height);
+        public virtual void Inflate(int width, int height)
+        {
+            Papa.Inflate(width, height);
+            Painter?.Paint(this);
+        }
 
         /// <summary>
         /// 将区域替换为与目标区域的交集
         /// </summary>
         /// <param name="rect">目标区域</param>
-        public virtual void Intersect(Rectangle rect) => Papa.Intersect(rect);
+        public virtual void Intersect(Rectangle rect)
+        {
+            Papa.Intersect(rect);
+            Painter?.Paint(this);
+        }
 
         /// <summary>
         /// 是否与目标区域相交
@@ -223,7 +293,11 @@ namespace LeonDirectUI.Control
         /// 将区域调整指定的量
         /// </summary>
         /// <param name="point"></param>
-        public virtual void Offset(Point point) => Papa.Offset(point);
+        public virtual void Offset(Point point)
+        {
+            Papa.Offset(point);
+            Painter?.Paint(this);
+        }
 
         #endregion
 
@@ -247,7 +321,7 @@ namespace LeonDirectUI.Control
         {
             if (painter == null) throw new Exception("Painter 对象为空");
 
-            painter.Paint(this);
+            Painter?.Paint(this);
         }
 
         /// <summary>
