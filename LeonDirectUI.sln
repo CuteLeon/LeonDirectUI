@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeonDirectUI", "LeonDirectUI\LeonDirectUI.csproj", "{2E832B4F-907C-454B-9EC0-0040B440029D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeonDirectUIDemo", "LeonDirectUIDemo\LeonDirectUIDemo.csproj", "{3533ABA3-8F48-46AF-96D5-FB608E9532BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2E832B4F-907C-454B-9EC0-0040B440029D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E832B4F-907C-454B-9EC0-0040B440029D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E832B4F-907C-454B-9EC0-0040B440029D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3533ABA3-8F48-46AF-96D5-FB608E9532BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3533ABA3-8F48-46AF-96D5-FB608E9532BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3533ABA3-8F48-46AF-96D5-FB608E9532BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3533ABA3-8F48-46AF-96D5-FB608E9532BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
