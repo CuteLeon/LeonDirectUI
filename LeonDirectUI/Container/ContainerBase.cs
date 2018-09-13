@@ -12,6 +12,7 @@ using LeonDirectUI.Win32;
 
 namespace LeonDirectUI.Container
 {
+    //TODO: ContainerBase 改为抽象类，由子类实现 InitializeLayout() 方法实现自定义布局；
 
     /// <summary>
     /// 容器基类
