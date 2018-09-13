@@ -19,5 +19,11 @@ namespace LeonDirectUI.Interface
         /// </summary>
         /// <param name="container"></param>
         void SetContainer(Control container);
+
+        /// <summary>
+        /// 接收到消息
+        /// </summary>
+        /// <param name="m"></param>
+        void MessageReceived(ref Message m);
     }
 }

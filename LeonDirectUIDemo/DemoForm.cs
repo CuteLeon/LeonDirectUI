@@ -16,25 +16,29 @@ namespace LeonDirectUIDemo
 {
     public partial class DemoForm : Form
     {
+        IPaint painter = new CommonPainter();
+        ContainerBase container = new ContainerBase();
+        ControlBase control_0 = new ControlBase();
+        ControlBase control_1 = new ControlBase();
+        ControlBase control_2 = new ControlBase();
+
         public DemoForm()
         {
             InitializeComponent();
         }
-
+        protected override void WndProc(ref Message m)
+        {
+            container.MessageReceived(ref m);
+            base.WndProc(ref m);
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-            IPaint painter = new CommonPainter();
-            ContainerBase container = new ContainerBase();
-            ControlBase control_0 = new ControlBase();
-            ControlBase control_1 = new ControlBase();
-            ControlBase control_2 = new ControlBase();
-
             container.SetContainer(this);
             painter.SetGraphics(this.CreateGraphics());
             control_0.SetPainter(painter);
             control_1.SetPainter(painter);
             control_2.SetPainter(painter);
-
+            
             control_0.Paint();
             control_1.Paint();
             control_2.Paint();

@@ -54,6 +54,5 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStyle\MouseStates.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
