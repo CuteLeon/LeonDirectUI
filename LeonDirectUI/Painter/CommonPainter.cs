@@ -28,6 +28,7 @@ namespace LeonDirectUI.Painter
             if (Graphics == null) throw new Exception("绘制器使用了空的 Graphics");
             if (control == null) throw new Exception("绘制器绘制空的 ControlBase");
 
+            //绘制文本对齐和换行：https://www.cnblogs.com/dannyqiu/articles/2837515.html
             //TODO: 实现绘制方法逻辑
             Console.WriteLine($"{this.ToString()} 绘制 {control.ToString()} ...");
             Graphics.FillRectangle(Brushes.Red,control.Rectangle);
