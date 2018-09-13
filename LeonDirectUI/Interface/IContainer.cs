@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeonDirectUI.DUIControl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,11 @@ namespace LeonDirectUI.Interface
 {
     public interface IContainer
     {
+        /// <summary>
+        /// 控件列表
+        /// </summary>
+        List<ControlBase> Controls { get; }
+
         /// <summary>
         /// 物理容器
         /// </summary>
@@ -25,5 +31,6 @@ namespace LeonDirectUI.Interface
         /// </summary>
         /// <param name="m"></param>
         void MessageReceived(ref Message m);
+        
     }
 }

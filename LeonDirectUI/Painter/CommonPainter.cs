@@ -30,6 +30,7 @@ namespace LeonDirectUI.Painter
 
             //TODO: 实现绘制方法逻辑
             Console.WriteLine($"{this.ToString()} 绘制 {control.ToString()} ...");
+            Graphics.FillRectangle(Brushes.Red,control.Rectangle);
         }
 
         /// <summary>

@@ -25,23 +25,33 @@ namespace LeonDirectUIDemo
         public DemoForm()
         {
             InitializeComponent();
-        }
-        protected override void WndProc(ref Message m)
-        {
-            container.MessageReceived(ref m);
-            base.WndProc(ref m);
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            container.SetContainer(this);
-            painter.SetGraphics(this.CreateGraphics());
+
+            container.SetContainer(label1);
+            painter.SetGraphics(label1.CreateGraphics());
             control_0.SetPainter(painter);
             control_1.SetPainter(painter);
             control_2.SetPainter(painter);
-            
-            control_0.Paint();
-            control_1.Paint();
-            control_2.Paint();
+
+            control_0.Rectangle = new Rectangle(0,0,200,100);
+
+            container.Controls.Add(control_0);
+            container.Controls.Add(control_1);
+            container.Controls.Add(control_2);
         }
+
+        protected override void WndProc(ref Message m)
+        {
+            //container.MessageReceived(ref m);
+            base.WndProc(ref m);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            foreach (ControlBase control in container.Controls)
+            {
+                control.Paint();
+            }
+        }
+
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LeonDirectUI.DUIControl;
 using LeonDirectUI.Interface;
 using LeonDirectUI.Painter;
+using LeonDirectUI.Win32;
 
 namespace LeonDirectUI.Container
 {
@@ -22,9 +24,18 @@ namespace LeonDirectUI.Container
     public class ContainerBase : IContainer
     {
         /// <summary>
+        /// 物理容器控件原有消息处理函数地址
+        /// </summary>
+        private IntPtr OldWndProcHandle = IntPtr.Zero;
+        /// <summary>
+        /// 此容器劫持到的新消息处理函数地址
+        /// </summary>
+        private IntPtr NewWndProcHandle = IntPtr.Zero;
+
+        /// <summary>
         /// 控件列表
         /// </summary>
-        public List<ControlBase> Controls { get; protected set; } = new List<ControlBase>();
+        public List<ControlBase> Controls { get; } = new List<ControlBase>();
 
         /// <summary>
         /// 控件列表索引器
@@ -32,7 +43,7 @@ namespace LeonDirectUI.Container
         /// <param name="index"></param>
         /// <returns></returns>
         public ControlBase this[int index] => Controls[index];
-        
+
         /// <summary>
         /// 物理容器
         /// </summary>
@@ -58,6 +69,41 @@ namespace LeonDirectUI.Container
         {
             TargetContainer = container ?? throw new Exception("注入物理容器为空");
 
+            if (OldWndProcHandle != IntPtr.Zero) UnHook();
+            container.HandleDestroyed += (s, v) => { /* TODO: 卸载钩子 */};
+
+            if (!container.IsHandleCreated)
+            {
+                container.HandleCreated += (s, v) => { SetHook(container); };
+                //throw new Exception("注入的物理容器未创建句柄，无法注册消息钩子");
+            }
+            else
+            {
+                SetHook(container);
+            }
+        }
+
+        private delegate int SubWndProc(IntPtr hWnd, int msg, int wParam, int lParam);
+        private int MyWndproc(IntPtr hwnd, int Msg, int wParam, int lParam)
+        {
+            Console.WriteLine($"被拦截的消息：{Msg}");
+            return Win32API.CallWindowProc(this.OldWndProcHandle, hwnd, Msg, wParam, lParam);
+        }
+        private void SetHook(Control container)
+        {
+            OldWndProcHandle = Win32API.GetWindowLong(container.Handle, Win32API.GWL_WNDPROC);
+            NewWndProcHandle = Marshal.GetFunctionPointerForDelegate(new SubWndProc((w, x, y, z) => MyWndproc(w, x, y, z)));
+            Win32API.SetWindowLong(container.Handle, Win32API.GWL_WNDPROC, NewWndProcHandle);
+            MessageBox.Show($"原消息处理函数地址：{OldWndProcHandle.ToString()}\n新消息处理函数地址：{NewWndProcHandle.ToString()}", "消息处理函数地址：");
+        }
+
+        private void UnHook()
+        {
+            if (TargetContainer != null && TargetContainer.IsHandleCreated && OldWndProcHandle != IntPtr.Zero)
+            {
+                Win32API.SetWindowLong(TargetContainer.Handle,Win32API.GWL_WNDPROC, OldWndProcHandle);
+                OldWndProcHandle = IntPtr.Zero;
+            }
         }
 
     }
