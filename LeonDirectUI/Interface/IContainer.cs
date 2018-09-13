@@ -30,7 +30,7 @@ namespace LeonDirectUI.Interface
         /// 接收到消息
         /// </summary>
         /// <param name="m"></param>
-        void MessageReceived(ref Message m);
+        int MessageReceived(IntPtr hWnd, int Msg, int wParam, int lParam);
         
     }
 }

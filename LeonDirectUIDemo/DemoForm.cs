@@ -39,12 +39,6 @@ namespace LeonDirectUIDemo
             container.Controls.Add(control_2);
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            //container.MessageReceived(ref m);
-            base.WndProc(ref m);
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             foreach (ControlBase control in container.Controls)

@@ -23,15 +23,7 @@ namespace LeonDirectUI.Container
     /// </summary>
     public class ContainerBase : IContainer
     {
-        /// <summary>
-        /// 物理容器控件原有消息处理函数地址
-        /// </summary>
-        private IntPtr OldWndProcHandle = IntPtr.Zero;
-        /// <summary>
-        /// 此容器劫持到的新消息处理函数地址
-        /// </summary>
-        private IntPtr NewWndProcHandle = IntPtr.Zero;
-
+        
         /// <summary>
         /// 控件列表
         /// </summary>
@@ -53,12 +45,15 @@ namespace LeonDirectUI.Container
         /// 接收到消息
         /// </summary>
         /// <param name="m"></param>
-        public virtual void MessageReceived(ref Message m)
+        public virtual int MessageReceived(IntPtr hWnd, int Msg, int wParam, int lParam)
         {
-            switch (m.Msg)
+            //Console.WriteLine($"{DateTime.Now.ToString()} - {hWnd} : {Msg} ({wParam}, {lParam})");
+            switch (Msg)
             {
                 //case 
             }
+            //方形
+            return Win32API.CallWindowProc(this.OldWndProcHandle, hWnd, Msg, wParam, lParam);
         }
 
         /// <summary>
@@ -83,28 +78,61 @@ namespace LeonDirectUI.Container
             }
         }
 
+        #region 钩子
+
+        /// <summary>
+        /// 物理容器控件原有消息处理函数地址
+        /// </summary>
+        private IntPtr OldWndProcHandle = IntPtr.Zero;
+        /// <summary>
+        /// 此容器劫持到的新消息处理函数地址
+        /// </summary>
+        private IntPtr NewWndProcHandle = IntPtr.Zero;
+
+        /// <summary>
+        /// 消息处理函数委托
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
         private delegate int SubWndProc(IntPtr hWnd, int msg, int wParam, int lParam);
-        private int MyWndproc(IntPtr hwnd, int Msg, int wParam, int lParam)
-        {
-            Console.WriteLine($"被拦截的消息：{Msg}");
-            return Win32API.CallWindowProc(this.OldWndProcHandle, hwnd, Msg, wParam, lParam);
-        }
+
+        /// <summary>
+        /// 挂载钩子
+        /// </summary>
+        /// <param name="container"></param>
         private void SetHook(Control container)
         {
+            //记录物理控件原消息处理函数句柄
             OldWndProcHandle = Win32API.GetWindowLong(container.Handle, Win32API.GWL_WNDPROC);
-            NewWndProcHandle = Marshal.GetFunctionPointerForDelegate(new SubWndProc((w, x, y, z) => MyWndproc(w, x, y, z)));
-            Win32API.SetWindowLong(container.Handle, Win32API.GWL_WNDPROC, NewWndProcHandle);
-            MessageBox.Show($"原消息处理函数地址：{OldWndProcHandle.ToString()}\n新消息处理函数地址：{NewWndProcHandle.ToString()}", "消息处理函数地址：");
+            if (OldWndProcHandle == IntPtr.Zero) Console.WriteLine("挂载钩子前获取原消息处理方法句柄出错");
+            
+            //劫持消息
+            NewWndProcHandle = Marshal.GetFunctionPointerForDelegate(new SubWndProc((w, x, y, z) => MessageReceived(w, x, y, z)));
+            IntPtr result = Win32API.SetWindowLong(container.Handle, Win32API.GWL_WNDPROC, NewWndProcHandle);
+
+            //检查劫持结果
+            if (result == IntPtr.Zero && NewWndProcHandle!=IntPtr.Zero)
+                throw new Exception($"挂载物理控件消息钩子失败：NewWndProcHandle = {NewWndProcHandle}");
         }
 
+        /// <summary>
+        /// 注销钩子
+        /// </summary>
         private void UnHook()
         {
             if (TargetContainer != null && TargetContainer.IsHandleCreated && OldWndProcHandle != IntPtr.Zero)
             {
+                //把物理控件的消息处理函数恢复到原方法
                 Win32API.SetWindowLong(TargetContainer.Handle,Win32API.GWL_WNDPROC, OldWndProcHandle);
+                //清楚变量记录
                 OldWndProcHandle = IntPtr.Zero;
             }
         }
+
+        #endregion
 
     }
 }
