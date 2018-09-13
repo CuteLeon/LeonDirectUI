@@ -31,6 +31,15 @@ namespace LeonDirectUI.Interface
         /// </summary>
         /// <param name="m"></param>
         int MessageReceived(IntPtr hWnd, int Msg, int wParam, int lParam);
-        
+
+        /// <summary>
+        /// 初始化布局
+        /// </summary>
+        void InitializeLayout();
+
+        /// <summary>
+        /// 绘制全部可见虚拟控件
+        /// </summary>
+        void PaintAll();
     }
 }

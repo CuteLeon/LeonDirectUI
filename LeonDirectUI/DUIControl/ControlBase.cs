@@ -7,9 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-//TODO: 设计一个抽象容器类作为 DirectUI 控件的容器，由使用者继承并实现，用于注册和维护控件并绘制 DirectUI 控件；为控件注入控制器之前，需要先将物理容器的CreateGraphics()注入到绘制器；
-//TODO: 再完成一个用于支持 ControlMouseable 的绘制器，将通用绘制器和Mouseable绘制器分别注入ControlBase和ControlMouseable类型对象；
-
 namespace LeonDirectUI.DUIControl
 {
     /// <summary>
