@@ -12,14 +12,14 @@ using LeonDirectUI.Win32;
 
 namespace LeonDirectUI.Container
 {
-    //TODO: ContainerBase 改为抽象类，由子类实现 InitializeLayout() 方法实现自定义布局；
-
     /// <summary>
     /// 容器基类
     /// </summary>
-    public class ContainerBase : IContainer
+    public abstract class ContainerBase : IContainer
     {
-        
+
+        #region 基础字段
+
         /// <summary>
         /// 控件列表
         /// </summary>
@@ -35,7 +35,75 @@ namespace LeonDirectUI.Container
         /// <summary>
         /// 物理容器
         /// </summary>
-        public Control TargetContainer { get; set; }
+        public Control TargetContainer { get; protected set; }
+
+        #endregion
+
+        #region 基础方法
+        
+        /// <summary>
+        /// 构造容器基类
+        /// </summary>
+        public ContainerBase()
+        {
+            CustomWndProc = new SubWndProc((w, x, y, z) => MessageReceived(w, x, y, z));
+        }
+
+        /// <summary>
+        /// 注入物理容器
+        /// </summary>
+        /// <param name="container"></param>
+        public void SetContainer(Control container)
+        {
+            TargetContainer = container ?? throw new Exception("注入物理容器为空");
+            
+            //如果已经有钩子需要注销掉
+            if (Hooked) UnHook();
+
+            //TODO: 不提供自动等待句柄创建后挂载钩子的能力，注入的物理容器不可用直接报错
+            /*
+            base.DoubleBuffered = true;
+            base.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            base.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            base.SetStyle(ControlStyles.ResizeRedraw, false);
+            base.SetStyle(ControlStyles.UserPaint, true);
+             */
+
+            if (!container.IsHandleCreated)
+            {
+                //等待控件句柄创建后挂载钩子
+                container.HandleCreated += (s, v) => 
+                {
+                    SetHook(container);
+                    ResetSize(container.DisplayRectangle.Width, container.DisplayRectangle.Height);
+                };
+            }
+            else
+            {
+                //立即挂载钩子
+                SetHook(container);
+                ResetSize(container.DisplayRectangle.Width, container.DisplayRectangle.Height);
+            }
+        }
+
+        /// <summary>
+        /// 注入全局绘制器
+        /// </summary>
+        /// <param name="painter"></param>
+        public void SetPainter(IPainter painter)
+        {
+            if (painter==null) throw new Exception("注入绘制器为空");
+
+            foreach (var control in Controls)
+            {
+                control.SetPainter(painter);
+                control.Paint();
+            }
+        }
+
+        #endregion
+
+        #region 消息处理层
 
         /// <summary>
         /// 接收到消息
@@ -45,6 +113,8 @@ namespace LeonDirectUI.Container
         {
             //TODO: 燃烧吧，大脑！参考：Systen.Windwos.Forms.Control.WndProc(ref Message m) 方法；
             //TODO: 鼠标移动：判断当前响应的控件；鼠标按压、抬起、点击、双击等，调用控件 OnMouseXXX（注意鼠标按压后仍移动，并移动到别处抬起的情况），由控件再回调鼠标事件；此容器刚再向外部触发封装好的自定义事件；
+            //TODO: 劫持到尺寸改变的消息时调用 ResetSize(int, int) 调整虚拟控件位置和大小以刷新布局；
+
             //Console.WriteLine($"{DateTime.Now.ToString()} - {hWnd} : {Msg} ({wParam}, {lParam})");
             switch (Msg)
             {
@@ -55,28 +125,7 @@ namespace LeonDirectUI.Container
             return Win32API.CallWindowProc(this.OldWndProcHandle, hWnd, Msg, wParam, lParam);
         }
 
-        /// <summary>
-        /// 注入物理容器
-        /// </summary>
-        /// <param name="container"></param>
-        public void SetContainer(Control container)
-        {
-            TargetContainer = container ?? throw new Exception("注入物理容器为空");
-
-            //如果已经有钩子需要注销掉
-            if(Hooked) UnHook();
-
-            if (!container.IsHandleCreated)
-            {
-                //等待控件句柄创建后挂载钩子
-                container.HandleCreated += (s, v) => { SetHook(container); };
-            }
-            else
-            {
-                //立即挂载钩子
-                SetHook(container);
-            }
-        }
+        #endregion
 
         #region 钩子
 
@@ -102,7 +151,11 @@ namespace LeonDirectUI.Container
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        private delegate int SubWndProc(IntPtr hWnd, int msg, int wParam, int lParam);
+        public delegate int SubWndProc(IntPtr hWnd, int msg, int wParam, int lParam);
+        /// <summary>
+        /// 自定义消息处理函数
+        /// </summary>
+        SubWndProc CustomWndProc;
 
         /// <summary>
         /// 挂载钩子
@@ -117,7 +170,7 @@ namespace LeonDirectUI.Container
             if (OldWndProcHandle == IntPtr.Zero) Console.WriteLine("挂载钩子前获取原消息处理方法句柄出错");
             
             //劫持消息
-            NewWndProcHandle = Marshal.GetFunctionPointerForDelegate(new SubWndProc((w, x, y, z) => MessageReceived(w, x, y, z)));
+            NewWndProcHandle = Marshal.GetFunctionPointerForDelegate(CustomWndProc);
             IntPtr result = Win32API.SetWindowLong(container.Handle, Win32API.GWL_WNDPROC, NewWndProcHandle);
 
             //检查劫持结果
@@ -152,16 +205,11 @@ namespace LeonDirectUI.Container
         #endregion
 
         #region 布局和绘制
-        
+
         /// <summary>
-        /// 页面布局
+        /// 页面布局 (初始化布局)
         /// </summary>
-        public virtual void InitializeLayout()
-        {
-            if (!Hooked) return;
-            //TODO: 在这里【1. 布局】并【2. 绑定虚拟控件的事件】，同于 Form.InitializeComponent();
-            //TODO: 劫持到尺寸改变的消息时调用这里调整虚拟控件位置和大小以刷新布局；
-        }
+        public abstract void InitializeLayout();
 
         /// <summary>
         /// 绘制全部可见虚拟控件
@@ -170,12 +218,20 @@ namespace LeonDirectUI.Container
         {
             foreach (var control in Controls.Where(c => c.Visible))
             {
-                control.Paint();
+                if (control.Painter != null)
+                    control.Paint();
             }
+            Console.WriteLine("——< 绘制完成>——————");
         }
 
-        #endregion
+        /// <summary>
+        /// 根据尺寸响应布局
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public abstract void ResetSize(int width, int height);
 
+        #endregion
 
     }
 }

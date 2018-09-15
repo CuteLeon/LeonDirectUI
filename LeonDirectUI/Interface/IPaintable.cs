@@ -12,16 +12,12 @@ namespace LeonDirectUI.Interface
     /// </summary>
     public interface IPaintable
     {
-        /// <summary>
-        /// 绘制器
-        /// </summary>
-        IPaint Painter { get; set; }
 
         /// <summary>
         /// 注入绘制器
         /// </summary>
         /// <param name="painter"></param>
-        void SetPainter(IPaint painter);
+        void SetPainter(IPainter painter);
 
         /// <summary>
         /// 绘制
@@ -32,7 +28,7 @@ namespace LeonDirectUI.Interface
         /// 调用绘制器绘制
         /// </summary>
         /// <param name="painter"></param>
-        void Paint(IPaint painter);
+        void Paint(IPainter painter);
 
     }
 }

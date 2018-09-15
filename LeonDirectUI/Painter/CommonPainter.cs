@@ -12,7 +12,7 @@ namespace LeonDirectUI.Painter
     /// <summary>
     /// 通用绘制器
     /// </summary>
-    public class CommonPainter : IPaint
+    public class CommonPainter : IPainter
     {
         /// <summary>
         /// 绘图对象
@@ -30,8 +30,12 @@ namespace LeonDirectUI.Painter
 
             //绘制文本对齐和换行：https://www.cnblogs.com/dannyqiu/articles/2837515.html
             //TODO: 实现绘制方法逻辑
-            Console.WriteLine($"{this.ToString()} 绘制 {control.ToString()} ...");
-            Graphics.FillRectangle(Brushes.Red,control.Rectangle);
+            Console.WriteLine($"{this.ToString()} 绘制 {control.Name} ...");
+            using (SolidBrush brush = new SolidBrush(control.BackColor))
+            {
+                Graphics.FillRectangle(brush, control.Rectangle);
+                Graphics.DrawString(control.Name, SystemFonts.DefaultFont, Brushes.Red, control.Location);
+            }
         }
 
         /// <summary>

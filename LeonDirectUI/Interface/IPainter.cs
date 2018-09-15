@@ -11,7 +11,7 @@ namespace LeonDirectUI.Interface
     /// <summary>
     /// 绘制接口
     /// </summary>
-    public interface IPaint
+    public interface IPainter
     {
         /// <summary>
         /// 绘制方法

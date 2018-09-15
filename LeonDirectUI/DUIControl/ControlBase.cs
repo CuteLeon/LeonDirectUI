@@ -20,7 +20,7 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 绘制器
         /// </summary>
-        public IPaint Painter { get; set; }
+        public IPainter Painter { get; set; }
 
         #endregion
 
@@ -31,17 +31,17 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 控件的名称
         /// </summary>
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = "虚拟控件";
 
         /// <summary>
         /// 可用性
         /// </summary>
-        public virtual bool Enabled { get; set; }
+        public virtual bool Enabled { get; set; } = true;
 
         /// <summary>
         /// 可见性
         /// </summary>
-        public virtual bool Visible { get; set; }
+        public virtual bool Visible { get; set; } = true;
 
         #endregion
 
@@ -51,22 +51,27 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 显示文本
         /// </summary>
-        public virtual string Text { get; set; }
+        public virtual string Text { get; set; } = "虚拟控件";
 
         /// <summary>
         /// 文本的显示位置
         /// </summary>
-        public virtual ContentAlignment TextAlign { get; set; }
+        public virtual ContentAlignment TextAlign { get; set; } = ContentAlignment.MiddleLeft;
 
         /// <summary>
         /// 字体
         /// </summary>
-        public virtual Font Font { get; set; }
+        public virtual Font Font { get; set; } = SystemFonts.DefaultFont;
+
+        /// <summary>
+        /// 背景颜色
+        /// </summary>
+        public virtual Color BackColor { get; set; } = Color.WhiteSmoke;
 
         /// <summary>
         /// 字体颜色
         /// </summary>
-        public virtual Color ForeColor { get; set; }
+        public virtual Color ForeColor { get; set; } = Color.Black;
 
         /// <summary>
         /// 控件显示图像
@@ -76,7 +81,7 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 图像的显示位置
         /// </summary>
-        public virtual ContentAlignment ImageAlign { get; set; }
+        public virtual ContentAlignment ImageAlign { get; set; } = ContentAlignment.MiddleCenter;
 
         /// <summary>
         /// 背景图像
@@ -86,7 +91,7 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 背景图显示方式
         /// </summary>
-        public virtual ImageLayout BackgroundImageLayout { get; set; }
+        public virtual ImageLayout BackgroundImageLayout { get; set; } = ImageLayout.None;
 
         #endregion
 
@@ -236,7 +241,7 @@ namespace LeonDirectUI.DUIControl
         public virtual void SetLocation(int left, int top)
         {
             Papa.X = left;
-            Papa.Y = Height;
+            Papa.Y = top;
             
             Painter?.Paint(this);
         }
@@ -305,7 +310,7 @@ namespace LeonDirectUI.DUIControl
         /// 注入绘制器
         /// </summary>
         /// <param name="painter"></param>
-        public void SetPainter(IPaint painter)
+        public void SetPainter(IPainter painter)
         {
             Painter = painter ?? throw new Exception("注入空的绘制器");
         }
@@ -314,8 +319,8 @@ namespace LeonDirectUI.DUIControl
         /// 调用绘制器绘制
         /// </summary>
         /// <param name="painter"></param>
-        [Obsolete("这是调试用方法，请直接使用 Paint() 方法调用 SetPainter() 方法已经注入的 IPaint 对象绘制", false)]
-        public void Paint(IPaint painter)
+        [Obsolete("这是调试用方法，请直接使用 Paint() 方法调用 SetPainter() 方法已经注入的 IPainter 对象绘制", false)]
+        public void Paint(IPainter painter)
         {
             if (painter == null) throw new Exception("Painter 对象为空");
 
