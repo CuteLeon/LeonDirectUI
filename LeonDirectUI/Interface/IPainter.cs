@@ -16,13 +16,9 @@ namespace LeonDirectUI.Interface
         /// <summary>
         /// 绘制方法
         /// </summary>
-        /// <param name="control"></param>
-        void Paint(ControlBase control);
-
-        /// <summary>
-        /// 注入绘图对象
-        /// </summary>
         /// <param name="graphics"></param>
-        void SetGraphics(Graphics graphics);
+        /// <param name="control"></param>
+        void Paint(Graphics graphics, ControlBase control);
+
     }
 }

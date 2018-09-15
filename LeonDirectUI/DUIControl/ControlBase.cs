@@ -13,20 +13,11 @@ namespace LeonDirectUI.DUIControl
     /// <summary>
     /// 控件基类
     /// </summary>
-    public class ControlBase : IPaintable,IMouseable
+    public class ControlBase : IMouseable
     {
-        #region 字段
-
-        /// <summary>
-        /// 绘制器
-        /// </summary>
-        public IPainter Painter { get; set; }
-
-        #endregion
 
         #region 基本属性
         //TODO: 可见性和可用性影响显示效果和交互效果
-        //TODO: 属性变化触发响应的变化事件
 
         /// <summary>
         /// 控件的名称
@@ -111,7 +102,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa.X = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -124,7 +115,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa.Y = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -137,7 +128,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa.Width = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -150,7 +141,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa.Height = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -173,7 +164,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -186,7 +177,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa.Size = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -199,7 +190,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Papa.Location = value;
-                Painter?.Paint(this);
+                //TODO: 通知容器刷新虚拟控件
             }
         }
 
@@ -217,7 +208,7 @@ namespace LeonDirectUI.DUIControl
             Papa.Width = width;
             Papa.Height = height;
             
-            Painter?.Paint(this);
+            //TODO: 通知容器刷新虚拟控件
         }
 
         /// <summary>
@@ -230,7 +221,7 @@ namespace LeonDirectUI.DUIControl
             Papa.Width = width;
             Papa.Height = height;
             
-            Painter?.Paint(this);
+            //TODO: 通知容器刷新虚拟控件
         }
 
         /// <summary>
@@ -243,7 +234,7 @@ namespace LeonDirectUI.DUIControl
             Papa.X = left;
             Papa.Y = top;
             
-            Painter?.Paint(this);
+            //TODO: 通知容器刷新虚拟控件
         }
 
         #endregion
@@ -266,7 +257,7 @@ namespace LeonDirectUI.DUIControl
         public virtual void Inflate(int width, int height)
         {
             Papa.Inflate(width, height);
-            Painter?.Paint(this);
+            //TODO: 通知容器刷新虚拟控件
         }
 
         /// <summary>
@@ -276,7 +267,7 @@ namespace LeonDirectUI.DUIControl
         public virtual void Intersect(Rectangle rect)
         {
             Papa.Intersect(rect);
-            Painter?.Paint(this);
+            //TODO: 通知容器刷新虚拟控件
         }
 
         /// <summary>
@@ -299,42 +290,7 @@ namespace LeonDirectUI.DUIControl
         public virtual void Offset(Point point)
         {
             Papa.Offset(point);
-            Painter?.Paint(this);
-        }
-
-        #endregion
-
-        #region 绘制方法
-
-        /// <summary>
-        /// 注入绘制器
-        /// </summary>
-        /// <param name="painter"></param>
-        public void SetPainter(IPainter painter)
-        {
-            Painter = painter ?? throw new Exception("注入空的绘制器");
-        }
-
-        /// <summary>
-        /// 调用绘制器绘制
-        /// </summary>
-        /// <param name="painter"></param>
-        [Obsolete("这是调试用方法，请直接使用 Paint() 方法调用 SetPainter() 方法已经注入的 IPainter 对象绘制", false)]
-        public void Paint(IPainter painter)
-        {
-            if (painter == null) throw new Exception("Painter 对象为空");
-
-            Painter?.Paint(this);
-        }
-
-        /// <summary>
-        /// 绘制
-        /// </summary>
-        public void Paint()
-        {
-            if (Painter == null) throw new Exception("Painter 对象为空");
-
-            Painter.Paint(this);
+            //TODO: 通知容器刷新虚拟控件
         }
 
         #endregion
@@ -353,8 +309,7 @@ namespace LeonDirectUI.DUIControl
                 if (mouseState != value)
                 {
                     mouseState = value;
-                    //鼠标状态改变调用绘制方法
-                    Painter?.Paint(this);
+                    //TODO: 通知容器刷新虚拟控件
                 }
             }
         }
