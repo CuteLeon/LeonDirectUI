@@ -84,6 +84,11 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual ImageLayout BackgroundImageLayout { get; set; } = ImageLayout.None;
 
+        /// <summary>
+        /// 内边距
+        /// </summary>
+        public virtual Padding Padding { get; set; } = new Padding(3, 3, 3, 3);
+
         #endregion
 
         #region 区域

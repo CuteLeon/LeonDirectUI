@@ -57,6 +57,7 @@
             // 
             // MainSplitContainer.Panel1
             // 
+            this.MainSplitContainer.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MainSplitContainer.Panel1.Controls.Add(this.button1);
             this.MainSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(5);
             // 

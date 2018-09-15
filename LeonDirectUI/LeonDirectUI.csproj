@@ -43,12 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Container\ContainerBase.cs" />
+    <Compile Include="Container\ContainerBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DUIControl\ControlBase.cs" />
     <Compile Include="Interface\IContainer.cs" />
     <Compile Include="Interface\IMouseable.cs" />
     <Compile Include="Interface\IPainter.cs" />
     <Compile Include="Painter\CommonPainter.cs" />
+    <Compile Include="Painter\PainterBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStyle\MouseStates.cs" />
   </ItemGroup>

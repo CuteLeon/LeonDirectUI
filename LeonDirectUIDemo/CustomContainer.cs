@@ -107,21 +107,17 @@ namespace LeonDirectUIDemo
         /// <param name="height"></param>
         public override void ResetSize(int width, int height)
         {
-            CloseButton.SetSize(Math.Min(width, 90), Math.Min(height, 28));
+            CloseButton.SetSize(Math.Min(width, 28), Math.Min(height, 28));
             CloseButton.SetLocation(width - CloseButton.Width, 0);
-            Console.WriteLine(CloseButton.Rectangle.ToString());
 
             TitleLabel.SetBounds(0, 0, CloseButton.Left, CloseButton.Height);
-            Console.WriteLine(TitleLabel.Rectangle.ToString());
 
             PreviewImageBox.SetLocation(0, TitleLabel.Bottom);
             PreviewImageBox.Height = Math.Max(height - PreviewImageBox.Top, 0);
             PreviewImageBox.Width = Math.Min(width, PreviewImageBox.Height);
-            Console.WriteLine(PreviewImageBox.Rectangle.ToString());
 
             DescriptionLabel.SetLocation(PreviewImageBox.Right, PreviewImageBox.Top);
             DescriptionLabel.SetSize(width - DescriptionLabel.Left, PreviewImageBox.Height);
-            Console.WriteLine(DescriptionLabel.Rectangle.ToString());
         }
 
         #endregion
