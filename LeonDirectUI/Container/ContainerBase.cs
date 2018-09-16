@@ -57,6 +57,15 @@ namespace LeonDirectUI.Container
             base.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             base.SetStyle(ControlStyles.ResizeRedraw, true);
             base.SetStyle(ControlStyles.UserPaint, true);
+
+            //初始化布局
+            InitializeLayout();
+
+            //监听子虚拟控件绘制请求
+            foreach (var control in Controls)
+            {
+                control.PaintRequired += Control_PaintRequired;
+            }
         }
 
         /// <summary>
@@ -90,7 +99,7 @@ namespace LeonDirectUI.Container
         #endregion
 
         #region 布局和绘制
-
+        
         /// <summary>
         /// 页面布局 (初始化布局)
         /// </summary>
@@ -127,6 +136,26 @@ namespace LeonDirectUI.Container
         public void PaintAll()
         {
             PaintAll(this.CreateGraphics());
+        }
+
+        /// <summary>
+        /// 子虚拟控件绘制请求事件
+        /// </summary>
+        /// <param name="sender">请求绘制的子虚拟控件</param>
+        /// <param name="rectangle">涉及的区域</param>
+        protected void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
+        {
+            if (sender == null) throw new Exception("空的虚拟控件请求了绘制");
+            if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
+
+            //绘制请求绘制的虚拟控件和与绘制区域有交集的可见虚拟控件
+            using (Graphics graphics = this.CreateGraphics())
+            {
+                foreach (var control in Controls.Where(ctl => ctl.Visible && ctl!=sender && ctl.IntersectsWith(rectangle)))
+                    Painter?.Paint(graphics, control);
+                //最后绘制发起请求的虚拟控件
+                Painter?.Paint(graphics, sender);
+            }
         }
 
         /// <summary>

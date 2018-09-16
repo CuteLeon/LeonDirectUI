@@ -24,15 +24,33 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual string Name { get; set; } = "虚拟控件";
 
+        private bool _enabled = true;
         /// <summary>
         /// 可用性
         /// </summary>
-        public virtual bool Enabled { get; set; } = true;
+        public virtual bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                _enabled = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private bool _visible = true;
         /// <summary>
         /// 可见性
         /// </summary>
-        public virtual bool Visible { get; set; } = true;
+        public virtual bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                if(value) PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
         #endregion
 
@@ -106,8 +124,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa.X;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa.X = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -119,8 +138,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Y;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa.Y = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -132,8 +152,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Width;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa.Width = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -145,8 +166,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Height;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa.Height = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -168,8 +190,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -181,8 +204,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Size;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa.Size = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -194,8 +218,9 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Location;
             set
             {
+                Rectangle lastRectangle = Rectangle;
                 Papa.Location = value;
-                //TODO: 通知容器刷新虚拟控件
+                PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -208,12 +233,12 @@ namespace LeonDirectUI.DUIControl
         /// <param name="height">高度</param>
         public virtual void SetBounds(int left, int top, int width, int height)
         {
+            Rectangle lastRectangle = Rectangle;
             Papa.X = left;
             Papa.Y = top;
             Papa.Width = width;
             Papa.Height = height;
-            
-            //TODO: 通知容器刷新虚拟控件
+            PaintRequired?.Invoke(this, lastRectangle);
         }
 
         /// <summary>
@@ -223,10 +248,10 @@ namespace LeonDirectUI.DUIControl
         /// <param name="height">高度</param>
         public virtual void SetSize(int width, int height)
         {
+            Rectangle lastRectangle = Rectangle;
             Papa.Width = width;
             Papa.Height = height;
-            
-            //TODO: 通知容器刷新虚拟控件
+            PaintRequired?.Invoke(this, lastRectangle);
         }
 
         /// <summary>
@@ -236,10 +261,10 @@ namespace LeonDirectUI.DUIControl
         /// <param name="top">上坐标</param>
         public virtual void SetLocation(int left, int top)
         {
+            Rectangle lastRectangle = Rectangle;
             Papa.X = left;
             Papa.Y = top;
-            
-            //TODO: 通知容器刷新虚拟控件
+            PaintRequired?.Invoke(this, lastRectangle);
         }
 
         #endregion
@@ -268,8 +293,9 @@ namespace LeonDirectUI.DUIControl
         /// <param name="height">放大高度</param>
         public virtual void Inflate(int width, int height)
         {
+            Rectangle lastRectangle = Rectangle;
             Papa.Inflate(width, height);
-            //TODO: 通知容器刷新虚拟控件
+            PaintRequired?.Invoke(this, lastRectangle);
         }
 
         /// <summary>
@@ -278,8 +304,9 @@ namespace LeonDirectUI.DUIControl
         /// <param name="rect">目标区域</param>
         public virtual void Intersect(Rectangle rect)
         {
+            Rectangle lastRectangle = Rectangle;
             Papa.Intersect(rect);
-            //TODO: 通知容器刷新虚拟控件
+            PaintRequired?.Invoke(this, lastRectangle);
         }
 
         /// <summary>
@@ -301,8 +328,9 @@ namespace LeonDirectUI.DUIControl
         /// <param name="point"></param>
         public virtual void Offset(Point point)
         {
+            Rectangle lastRectangle = Rectangle;
             Papa.Offset(point);
-            //TODO: 通知容器刷新虚拟控件
+            PaintRequired?.Invoke(this, lastRectangle);
         }
 
         #endregion
@@ -310,6 +338,7 @@ namespace LeonDirectUI.DUIControl
         #region 鼠标响应支持
 
         private MouseStates mouseState = MouseStates.Normal;
+
         /// <summary>
         /// 鼠标状态
         /// </summary>
@@ -321,7 +350,7 @@ namespace LeonDirectUI.DUIControl
                 if (mouseState != value)
                 {
                     mouseState = value;
-                    //TODO: 通知容器刷新虚拟控件
+                    PaintRequired?.Invoke(this, Rectangle);
                 }
             }
         }
@@ -329,6 +358,17 @@ namespace LeonDirectUI.DUIControl
         #endregion
 
         #region 容器订阅事件
+
+        /// <summary>
+        /// 绘制请求事件委托
+        /// </summary>
+        /// <param name="rectangle">绘制区域</param>
+        public delegate void PaintRequiredHandler(ControlBase sender, Rectangle rectangle);
+
+        /// <summary>
+        /// 请求绘制事件
+        /// </summary>
+        public event PaintRequiredHandler PaintRequired;
 
         /// <summary>
         /// 鼠标进入事件

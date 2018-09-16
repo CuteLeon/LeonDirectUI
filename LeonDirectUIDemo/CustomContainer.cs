@@ -62,11 +62,7 @@ namespace LeonDirectUIDemo
         /// <summary>
         /// 构造自定义容器类
         /// </summary>
-        public CustomContainer() : base()
-        {
-            //初始化布局
-            InitializeLayout();
-        }
+        public CustomContainer() : base() { }
 
         /// <summary>
         /// 响应式调整布局
