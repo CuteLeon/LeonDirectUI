@@ -27,7 +27,7 @@ namespace LeonDirectUI.Painter
         public static readonly ContentAlignment AnyCenterAlign = (ContentAlignment)546;
 
         [ThreadStatic]
-        private static ImageAttributes disabledImageAttr;
+        private static ImageAttributes DisabledImageAttr;
 
         #endregion
 
@@ -38,15 +38,22 @@ namespace LeonDirectUI.Painter
         /// <param name="control"></param>
         public abstract void Paint(Graphics graphics, ControlBase control);
 
+        #region 基类方法
+
         /// <summary>
         /// 绘制背景
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="backgroundImage"></param>
-        /// <param name="backColor"></param>
-        /// <param name="backgroundImageLayout"></param>
-        /// <param name="bounds"></param>
-        protected static void DrawBackground(Graphics graphics, Image backgroundImage, Color backColor, ImageLayout backgroundImageLayout, Rectangle bounds)
+        /// <param name="graphics">绘制对象</param>
+        /// <param name="backgroundImage">背景图（为空时仅绘制背景颜色）</param>
+        /// <param name="backColor">背景颜色（为 Transparent 时不绘制）</param>
+        /// <param name="backgroundImageLayout">背景图像布局方式</param>
+        /// <param name="bounds">绘制区域边界</param>
+        protected static void DrawBackground(
+            Graphics graphics,
+            Image backgroundImage,
+            Color backColor,
+            ImageLayout backgroundImageLayout,
+            Rectangle bounds)
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
 
@@ -97,8 +104,15 @@ namespace LeonDirectUI.Painter
                         ImageRectangle.Offset(LeftOffset, TopOffset);
                         ImageRectangle.Intersect(bounds);
                         //对图像截取后绘制，否则图像显示不全时将从左上角绘制而不是居中
-                        Rectangle SourceRectangle = new Rectangle(Math.Max(0, -LeftOffset), Math.Max(0, -TopOffset), ImageRectangle.Width, ImageRectangle.Height);
-                        graphics.DrawImage(backgroundImage, ImageRectangle, SourceRectangle, GraphicsUnit.Pixel);
+                        Rectangle SourceRectangle = new Rectangle(
+                            Math.Max(0, -LeftOffset),
+                            Math.Max(0, -TopOffset),
+                            ImageRectangle.Width,
+                            ImageRectangle.Height);
+                        graphics.DrawImage(backgroundImage,
+                            ImageRectangle,
+                            SourceRectangle,
+                            GraphicsUnit.Pixel);
                         return;
                     }
                 //保持比例拉伸，居中
@@ -126,7 +140,7 @@ namespace LeonDirectUI.Painter
                 case ImageLayout.Stretch:
                     {
                         //防止图像尺寸为负数时绘制翻转的图像
-                        if(ImageRectangle.Width>0 && ImageRectangle.Height>0)
+                        if (ImageRectangle.Width > 0 && ImageRectangle.Height > 0)
                             graphics.DrawImage(backgroundImage, ImageRectangle);
                         return;
                     }
@@ -136,128 +150,128 @@ namespace LeonDirectUI.Painter
         /// <summary>
         /// 绘制图像
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="image"></param>
-        /// <param name=""></param>
-        /// <param name="bounds"></param>
-        /// <returns></returns>
-        protected static void DrawImage(Graphics graphics, Image image, ContentAlignment alignment, Rectangle bounds, Padding padding, bool enabled)
+        /// <param name="graphics">绘制对象</param>
+        /// <param name="image">图像</param>
+        /// <param name="alignment">图像对齐方式</param>
+        /// <param name="bounds">绘制区域边界</param>
+        /// <param name="padding">绘制区域内边框</param>
+        /// <param name="enabled">图像样式（为 false 时绘制灰度图像）</param>
+        protected static void DrawImage(
+            Graphics graphics,
+            Image image,
+            ContentAlignment alignment,
+            Rectangle bounds,
+            Padding padding,
+            bool enabled = true)
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
             if (image == null) throw new ArgumentNullException("image");
 
-            //这里需要测试图像不同 ContentAlignment 的显示效果；
-            Rectangle rectangle = CalcImageRenderBounds(bounds, image, alignment, padding);
-            
-            if (enabled)
-                graphics.DrawImageUnscaledAndClipped(image, rectangle);
-            else
-                DrawImageDisabled(graphics,image,rectangle);
-        }
+            //测试 Padding
+            Rectangle ImageRectangle = new Rectangle(bounds.Location, image.Size);
+            Rectangle SourceRectangle = new Rectangle(Point.Empty, image.Size);
+            int LeftOffset = 0, TopOffset = 0;
 
-        /// <summary>
-        /// 计算图像绘制区域
-        /// </summary>
-        /// <param name="bounds"></param>
-        /// <param name="image"></param>
-        /// <param name="alignment"></param>
-        /// <param name="padding"></param>
-        protected static Rectangle CalcImageRenderBounds(Rectangle r, Image image, ContentAlignment align, Padding padding)
-        {
-            Size size = image.Size;
-            int x = r.X + padding.Left;
-            int y = r.Y + padding.Top;
-            if ((align & AnyRightAlign) != (ContentAlignment)0)
+            //计算绘制区域-横坐标
+            if ((alignment & AnyLeftAlign) != (ContentAlignment)0)
             {
-                x = r.X + r.Width - padding.Right - size.Width;
+                ImageRectangle.X += padding.Left;
             }
-            else if ((align & AnyCenterAlign) != (ContentAlignment)0)
+            else if ((alignment & AnyRightAlign) != (ContentAlignment)0)
             {
-                x = r.X + (r.Width - size.Width-padding.Horizontal) / 2 + padding.Left;
+                LeftOffset = bounds.Width - padding.Right - image.Width;
+                ImageRectangle.X += LeftOffset;
+                if (LeftOffset < 0) SourceRectangle.X = -LeftOffset; //需要裁剪
             }
-            if ((align & AnyBottomAlign) != (ContentAlignment)0)
+            else if ((alignment & AnyCenterAlign) != (ContentAlignment)0)
             {
-                y = r.Y + r.Height - padding.Bottom - size.Height;
+                LeftOffset = (bounds.Width - image.Width - padding.Horizontal) / 2 + padding.Left;
+                ImageRectangle.X += LeftOffset;
+                if (LeftOffset < 0) SourceRectangle.X = -LeftOffset; //需要裁剪
             }
-            else if ((align & AnyMiddleAlign) != (ContentAlignment)0)
+
+            //计算绘制区域-纵坐标
+            if ((alignment & AnyTopAlign) != (ContentAlignment)0)
             {
-                y = r.Y + (r.Height - padding.Vertical - size.Height) / 2 + padding.Top;
+                ImageRectangle.Y += padding.Top;
             }
-            return new Rectangle(x, y, size.Width, size.Height);
+            else if ((alignment & AnyBottomAlign) != (ContentAlignment)0)
+            {
+                TopOffset = bounds.Height - padding.Bottom - image.Height;
+                ImageRectangle.Y += TopOffset;
+                if (TopOffset < 0) SourceRectangle.Y = -TopOffset; //需要裁剪
+            }
+            else if ((alignment & AnyMiddleAlign) != (ContentAlignment)0)
+            {
+                if (LeftOffset < 0) SourceRectangle.X = -LeftOffset; //需要裁剪
+
+                TopOffset = (bounds.Height - image.Height - padding.Vertical) / 2 + padding.Top;
+                ImageRectangle.Y += TopOffset;
+                if (TopOffset < 0) SourceRectangle.Y = -TopOffset;
+            }
+
+            //最后调整
+            ImageRectangle.Intersect(bounds);
+            SourceRectangle.Size = ImageRectangle.Size;
+            if (SourceRectangle.Width <= 0 || SourceRectangle.Height <= 0) return;
+
+            if (enabled)
+            {
+                graphics.DrawImage(image, ImageRectangle, SourceRectangle, GraphicsUnit.Pixel);
+            }
+            else
+            {
+                DrawImageDisabled(graphics, image, ImageRectangle,SourceRectangle);
+            }
+
+            //graphics.DrawRectangle(Pens.Blue, ImageRectangle.Left, ImageRectangle.Top, ImageRectangle.Width - 1, ImageRectangle.Height - 1);
         }
 
         /// <summary>
         /// 绘制禁用的图像
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="image"></param>
-        /// <param name="imageBounds"></param>
-        protected static void DrawImageDisabled(Graphics graphics, Image image, Rectangle imageBounds)
+        /// <param name="graphics">绘制对象</param>
+        /// <param name="image">图像</param>
+        /// <param name="imageRectangle">绘制区域</param>
+        /// <param name="sourceRectangle">图像剪切区域</param>
+        protected static void DrawImageDisabled(
+            Graphics graphics, 
+            Image image, 
+            Rectangle imageRectangle, 
+            Rectangle sourceRectangle)
         {
-            if (graphics == null)
+            if (graphics == null) throw new ArgumentNullException("graphics");
+            if (image == null) throw new ArgumentNullException("image");
+
+            if (DisabledImageAttr == null)
             {
-                throw new ArgumentNullException("graphics");
-            }
-            if (image == null)
-            {
-                throw new ArgumentNullException("image");
-            }
-            Size size = image.Size;
-            if (disabledImageAttr == null)
-            {
-                float[][] array = new float[5][];
-                array[0] = new float[]
-                {
-                    0.2125f,
-                    0.2125f,
-                    0.2125f,
-                    0f,
-                    0f
-                };
-                array[1] = new float[]
-                {
-                    0.2577f,
-                    0.2577f,
-                    0.2577f,
-                    0f,
-                    0f
-                };
-                array[2] = new float[]
-                {
-                    0.0361f,
-                    0.0361f,
-                    0.0361f,
-                    0f,
-                    0f
-                };
-                float[][] arg_80_0 = array;
-                int arg_80_1 = 3;
-                float[] expr_78 = new float[5];
-                expr_78[3] = 1f;
-                arg_80_0[arg_80_1] = expr_78;
-                array[4] = new float[]
-                {
-                    0.38f,
-                    0.38f,
-                    0.38f,
-                    0f,
-                    1f
+                //初始化
+                float[][] array = new float[][] {
+                    new float[] { 0.2125f, 0.2125f, 0.2125f, 0f, 0f },
+                    new float[] { 0.2577f, 0.2577f, 0.2577f, 0f, 0f },
+                    new float[] { 0.0361f, 0.0361f, 0.0361f, 0f, 0f },
+                    new float[] { 0f, 0f, 0f, 1f, 0f },
+                    new float[] { 0.38f, 0.38f, 0.38f, 0f, 1f },
                 };
                 ColorMatrix colorMatrix = new ColorMatrix(array);
-                disabledImageAttr = new ImageAttributes();
-                disabledImageAttr.ClearColorKey();
-                disabledImageAttr.SetColorMatrix(colorMatrix);
+                DisabledImageAttr = new ImageAttributes();
+                DisabledImageAttr.ClearColorKey();
+                DisabledImageAttr.SetColorMatrix(colorMatrix);
             }
 
-            using (Bitmap bitmap = new Bitmap(image.Width, image.Height))
-            {
-                using (Graphics graphics2 = Graphics.FromImage(bitmap))
-                {
-                    graphics2.DrawImage(image, new Rectangle(0, 0, size.Width, size.Height), 0, 0, size.Width, size.Height, GraphicsUnit.Pixel, disabledImageAttr);
-                }
-                graphics.DrawImageUnscaled(image, imageBounds);
-                return;
-            }
+            graphics.DrawImage(
+                image, 
+                imageRectangle, 
+                sourceRectangle.Left, 
+                sourceRectangle.Top, 
+                sourceRectangle.Width, 
+                sourceRectangle.Height, 
+                GraphicsUnit.Pixel, 
+                DisabledImageAttr
+                );
         }
+
+        #endregion
+
     }
 }

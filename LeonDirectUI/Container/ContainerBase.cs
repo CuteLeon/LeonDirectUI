@@ -112,7 +112,7 @@ namespace LeonDirectUI.Container
             {
                 Painter.Paint(graphics, control);
             }
-            Console.WriteLine("——< 绘制完成>——————");
+            //Console.WriteLine("——< 绘制完成>——————");
         }
 
         /// <summary>
