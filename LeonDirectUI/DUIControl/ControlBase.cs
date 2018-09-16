@@ -17,7 +17,7 @@ namespace LeonDirectUI.DUIControl
     {
 
         #region 基本属性
-        //TODO: 可见性和可用性影响显示效果和交互效果
+        //TODO: [提醒] 可见性和可用性影响显示效果和交互效果
 
         /// <summary>
         /// 控件的名称
@@ -48,65 +48,155 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 _visible = value;
-                if(value) PaintRequired?.Invoke(this, Rectangle);
+                if (value) PaintRequired?.Invoke(this, Rectangle);
             }
         }
 
         #endregion
 
         #region 显示属性
-        //TODO: 每次显示属性发生变动需要调用绘制方法
+        //TODO: [提醒] 每次显示属性发生变动需要调用绘制方法
 
+        private string _text = "虚拟控件";
         /// <summary>
         /// 显示文本
         /// </summary>
-        public virtual string Text { get; set; } = "虚拟控件";
+        public virtual string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private ContentAlignment _textAlign = ContentAlignment.MiddleLeft;
         /// <summary>
         /// 文本的显示位置
         /// </summary>
-        public virtual ContentAlignment TextAlign { get; set; } = ContentAlignment.MiddleLeft;
+        public virtual ContentAlignment TextAlign
+        {
+            get => _textAlign;
+            set
+            {
+                _textAlign = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private Font _font = SystemFonts.DefaultFont;
         /// <summary>
         /// 字体
         /// </summary>
-        public virtual Font Font { get; set; } = SystemFonts.DefaultFont;
+        public virtual Font Font
+        {
+            get => _font;
+            set
+            {
+                _font = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private Color _backColor = Color.Transparent;
         /// <summary>
         /// 背景颜色
         /// </summary>
-        public virtual Color BackColor { get; set; } = Color.Transparent;
+        public virtual Color BackColor
+        {
+            get => _backColor;
+            set
+            {
+                _backColor = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private Color _foreColor = Color.Black;
         /// <summary>
         /// 字体颜色
         /// </summary>
-        public virtual Color ForeColor { get; set; } = Color.Black;
+        public virtual Color ForeColor
+        {
+            get => _foreColor;
+            set
+            {
+                _foreColor = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private Image _image;
         /// <summary>
         /// 控件显示图像
         /// </summary>
-        public virtual Image Image { get; set; }
+        public virtual Image Image
+        {
+            get => _image;
+            set
+            {
+                _image = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private ContentAlignment _imageAlign = ContentAlignment.MiddleCenter;
         /// <summary>
         /// 图像的显示位置
         /// </summary>
-        public virtual ContentAlignment ImageAlign { get; set; } = ContentAlignment.MiddleCenter;
+        public virtual ContentAlignment ImageAlign
+        {
+            get => _imageAlign;
+            set
+            {
+                _imageAlign = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private Image _backgroundImage;
         /// <summary>
         /// 背景图像
         /// </summary>
-        public virtual Image BackgroundImage { get; set; }
-
+        public virtual Image BackgroundImage
+        {
+            get => _backgroundImage;
+            set
+            {
+                _backgroundImage = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
+        
+        private ImageLayout _backgroundImageLayout = ImageLayout.None;
         /// <summary>
         /// 背景图显示方式
         /// </summary>
-        public virtual ImageLayout BackgroundImageLayout { get; set; } = ImageLayout.None;
+        public virtual ImageLayout BackgroundImageLayout
+        {
+            get => _backgroundImageLayout;
+            set
+            {
+                _backgroundImageLayout = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
 
+        private Padding _padding = new Padding(3, 3, 3, 3);
         /// <summary>
         /// 内边距
         /// </summary>
-        public virtual Padding Padding { get; set; } = new Padding(3, 3, 3, 3);
-
+        public virtual Padding Padding
+        {
+            get => _padding;
+            set
+            {
+                _padding = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
+        
         #endregion
 
         #region 区域
