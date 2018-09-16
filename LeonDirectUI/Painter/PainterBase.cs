@@ -17,8 +17,19 @@ namespace LeonDirectUI.Painter
     /// </summary>
     public abstract class PainterBase : IPainter
     {
+        #region 绘制 Image 相关
+
+        public static readonly ContentAlignment AnyRightAlign = (ContentAlignment)1092;
+        public static readonly ContentAlignment AnyLeftAlign = (ContentAlignment)273;
+        public static readonly ContentAlignment AnyTopAlign = (ContentAlignment)7;
+        public static readonly ContentAlignment AnyBottomAlign = (ContentAlignment)1792;
+        public static readonly ContentAlignment AnyMiddleAlign = (ContentAlignment)112;
+        public static readonly ContentAlignment AnyCenterAlign = (ContentAlignment)546;
+
         [ThreadStatic]
         private static ImageAttributes disabledImageAttr;
+
+        #endregion
 
         /// <summary>
         /// 绘制虚拟控件
@@ -28,7 +39,7 @@ namespace LeonDirectUI.Painter
         public abstract void Paint(Graphics graphics, ControlBase control);
 
         /// <summary>
-        /// 绘制背景（从.Net框架源代码摘出来的，稍微改动）
+        /// 绘制背景
         /// </summary>
         /// <param name="graphics"></param>
         /// <param name="backgroundImage"></param>
@@ -39,124 +50,87 @@ namespace LeonDirectUI.Painter
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
 
-            if (backgroundImage == null)
+            //绘制背景颜色
+            if (backColor != Color.Transparent)
             {
                 using (Brush brush = new SolidBrush(backColor))
                 {
                     graphics.FillRectangle(brush, bounds);
                 }
+            }
+
+            if (backgroundImage == null)
+            {
                 return;
             }
 
-            if (backgroundImageLayout == ImageLayout.Tile)
+            //绘制背景图像
+            Rectangle ImageRectangle = bounds;
+            switch (backgroundImageLayout)
             {
-                using (TextureBrush textureBrush = new TextureBrush(backgroundImage, WrapMode.Tile))
-                {
-                    graphics.FillRectangle(textureBrush, bounds);
-                    return;
-                }
-            }
-
-            Rectangle rectangle = CalculateBackgroundImageRectangle(bounds, backgroundImage, backgroundImageLayout);
-            using (SolidBrush solidBrush = new SolidBrush(backColor))
-            {
-                graphics.FillRectangle(solidBrush, bounds);
-            }
-
-            if (!bounds.Contains(rectangle))
-            {
-                if (backgroundImageLayout == ImageLayout.Stretch || backgroundImageLayout == ImageLayout.Zoom)
-                {
-                    rectangle.Intersect(bounds);
-                    graphics.DrawImage(backgroundImage, rectangle);
-                    return;
-                }
-                if (backgroundImageLayout == ImageLayout.None)
-                {
-                    rectangle.Offset(bounds.Location);
-                    Rectangle destRect = rectangle;
-                    destRect.Intersect(bounds);
-                    Rectangle rectangle2 = new Rectangle(Point.Empty, destRect.Size);
-                    graphics.DrawImage(backgroundImage, destRect, rectangle2.X, rectangle2.Y, rectangle2.Width, rectangle2.Height, GraphicsUnit.Pixel);
-                    return;
-                }
-                Rectangle destRect2 = rectangle;
-                destRect2.Intersect(bounds);
-                Rectangle rectangle3 = new Rectangle(new Point(destRect2.X - rectangle.X, destRect2.Y - rectangle.Y), destRect2.Size);
-                graphics.DrawImage(backgroundImage, destRect2, rectangle3.X, rectangle3.Y, rectangle3.Width, rectangle3.Height, GraphicsUnit.Pixel);
-                return;
-            }
-            else
-            {
-                ImageAttributes imageAttributes = new ImageAttributes();
-                imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
-                graphics.DrawImage(backgroundImage, rectangle, 0, 0, backgroundImage.Width, backgroundImage.Height, GraphicsUnit.Pixel, imageAttributes);
-                imageAttributes.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// 计算背景图绘制区域（从.Net框架源代码摘出来的，稍微改动）
-        /// </summary>
-        /// <param name="bounds"></param>
-        /// <param name="backgroundImage"></param>
-        /// <param name="imageLayout"></param>
-        /// <returns></returns>
-        protected static Rectangle CalculateBackgroundImageRectangle(Rectangle bounds, Image backgroundImage, ImageLayout imageLayout)
-        {
-            Rectangle result = bounds;
-            if (backgroundImage != null)
-            {
-                switch (imageLayout)
-                {
-                    case ImageLayout.None:
-                        result.Size = backgroundImage.Size;
-                        break;
-                    case ImageLayout.Center:
+                //非拉伸，重复绘制平铺
+                case ImageLayout.Tile:
+                    {
+                        using (TextureBrush textureBrush = new TextureBrush(backgroundImage, WrapMode.Tile))
                         {
-                            result.Size = backgroundImage.Size;
-                            Size size = bounds.Size;
-                            if (size.Width > result.Width)
-                            {
-                                result.X = (size.Width - result.Width) / 2;
-                            }
-                            if (size.Height > result.Height)
-                            {
-                                result.Y = (size.Height - result.Height) / 2;
-                            }
-                            break;
+                            //平移对齐绘制起始坐标
+                            textureBrush.TranslateTransform(ImageRectangle.Left, ImageRectangle.Top);
+                            graphics.FillRectangle(textureBrush, ImageRectangle);
                         }
-                    case ImageLayout.Stretch:
-                        result.Size = bounds.Size;
-                        break;
-                    case ImageLayout.Zoom:
+                        return;
+                    }
+                //非拉伸，仅左上角简单绘制一次
+                case ImageLayout.None:
+                    {
+                        ImageRectangle.Size = backgroundImage.Size;
+                        //裁剪为图像区域和显示区域的交集
+                        ImageRectangle.Intersect(bounds);
+                        graphics.DrawImageUnscaledAndClipped(backgroundImage, ImageRectangle);
+                        return;
+                    }
+                //非拉伸，居中显示
+                case ImageLayout.Center:
+                    {
+                        int LeftOffset = (bounds.Width - backgroundImage.Width) / 2;
+                        int TopOffset = (bounds.Height - backgroundImage.Height) / 2;
+                        ImageRectangle.Size = backgroundImage.Size;
+                        ImageRectangle.Offset(LeftOffset, TopOffset);
+                        ImageRectangle.Intersect(bounds);
+                        //对图像截取后绘制，否则图像显示不全时将从左上角绘制而不是居中
+                        Rectangle SourceRectangle = new Rectangle(Math.Max(0, -LeftOffset), Math.Max(0, -TopOffset), ImageRectangle.Width, ImageRectangle.Height);
+                        graphics.DrawImage(backgroundImage, ImageRectangle, SourceRectangle, GraphicsUnit.Pixel);
+                        return;
+                    }
+                //保持比例拉伸，居中
+                case ImageLayout.Zoom:
+                    {
+                        //防止图像尺寸为负数时绘制翻转的图像
+                        if (ImageRectangle.Width <= 0 || ImageRectangle.Height <= 0) return;
+
+                        float WidthScale = (float)bounds.Width / (float)backgroundImage.Width;
+                        float HeightScale = (float)bounds.Height / (float)backgroundImage.Height;
+                        if (WidthScale < HeightScale)
                         {
-                            Size size2 = backgroundImage.Size;
-                            float num = (float)bounds.Width / (float)size2.Width;
-                            float num2 = (float)bounds.Height / (float)size2.Height;
-                            if (num < num2)
-                            {
-                                result.Width = bounds.Width;
-                                result.Height = (int)((double)((float)size2.Height * num) + 0.5);
-                                if (bounds.Y >= 0)
-                                {
-                                    result.Y = (bounds.Height - result.Height) / 2;
-                                }
-                            }
-                            else
-                            {
-                                result.Height = bounds.Height;
-                                result.Width = (int)((double)((float)size2.Width * num2) + 0.5);
-                                if (bounds.X >= 0)
-                                {
-                                    result.X = (bounds.Width - result.Width) / 2;
-                                }
-                            }
-                            break;
+                            ImageRectangle.Height = (int)((double)((float)backgroundImage.Height * WidthScale) + 0.5);
+                            ImageRectangle.Y += (bounds.Height - ImageRectangle.Height) / 2;
                         }
-                }
+                        else
+                        {
+                            ImageRectangle.Width = (int)((double)((float)backgroundImage.Width * HeightScale) + 0.5);
+                            ImageRectangle.X += (bounds.Width - ImageRectangle.Width) / 2;
+                        }
+                        graphics.DrawImage(backgroundImage, ImageRectangle);
+                        return;
+                    }
+                //拉伸
+                case ImageLayout.Stretch:
+                    {
+                        //防止图像尺寸为负数时绘制翻转的图像
+                        if(ImageRectangle.Width>0 && ImageRectangle.Height>0)
+                            graphics.DrawImage(backgroundImage, ImageRectangle);
+                        return;
+                    }
             }
-            return result;
         }
 
         /// <summary>
@@ -172,7 +146,9 @@ namespace LeonDirectUI.Painter
             if (graphics == null) throw new ArgumentNullException("graphics");
             if (image == null) throw new ArgumentNullException("image");
 
-            Rectangle rectangle = CalculateImageRectangle(bounds, image, alignment, padding);
+            //这里需要测试图像不同 ContentAlignment 的显示效果；
+            Rectangle rectangle = CalcImageRenderBounds(bounds, image, alignment, padding);
+            
             if (enabled)
                 graphics.DrawImageUnscaledAndClipped(image, rectangle);
             else
@@ -186,35 +162,28 @@ namespace LeonDirectUI.Painter
         /// <param name="image"></param>
         /// <param name="alignment"></param>
         /// <param name="padding"></param>
-        protected static Rectangle CalculateImageRectangle(Rectangle bounds, Image image, ContentAlignment alignment, Padding padding)
+        protected static Rectangle CalcImageRenderBounds(Rectangle r, Image image, ContentAlignment align, Padding padding)
         {
-            Rectangle result = bounds;
-
-            //标记
-            Enum Top = ContentAlignment.TopLeft & ContentAlignment.TopRight;
-            Enum Middle = ContentAlignment.MiddleLeft & ContentAlignment.MiddleRight;
-            Enum Bottom = ContentAlignment.BottomLeft & ContentAlignment.BottomRight;
-            Enum Left = ContentAlignment.TopLeft & ContentAlignment.BottomLeft;
-            Enum Center = ContentAlignment.TopCenter & ContentAlignment.BottomCenter;
-            Enum Right = ContentAlignment.TopRight & ContentAlignment.BottomRight;
-
-            //计算垂直坐标
-            if (alignment.HasFlag(Top))
-                result.Y = padding.Top;
-            else if (alignment.HasFlag(Middle))
-                result.Y = bounds.Y + (bounds.Height - image.Height - padding.Vertical) / 2;
-            else if (alignment.HasFlag(Bottom))
-                result.Y = bounds.Bottom - padding.Bottom - image.Height;
-
-            //计算水平坐标
-            if (alignment.HasFlag(Left))
-                result.X = padding.Left;
-            else if (alignment.HasFlag(Center))
-                result.X = bounds.Left + (bounds.Width - image.Width - padding.Horizontal) / 2;
-            else if (alignment.HasFlag(Right))
-                result.X = bounds.Right - padding.Right - image.Width;
-
-            return result;
+            Size size = image.Size;
+            int x = r.X + padding.Left;
+            int y = r.Y + padding.Top;
+            if ((align & AnyRightAlign) != (ContentAlignment)0)
+            {
+                x = r.X + r.Width - padding.Right - size.Width;
+            }
+            else if ((align & AnyCenterAlign) != (ContentAlignment)0)
+            {
+                x = r.X + (r.Width - size.Width-padding.Horizontal) / 2 + padding.Left;
+            }
+            if ((align & AnyBottomAlign) != (ContentAlignment)0)
+            {
+                y = r.Y + r.Height - padding.Bottom - size.Height;
+            }
+            else if ((align & AnyMiddleAlign) != (ContentAlignment)0)
+            {
+                y = r.Y + (r.Height - padding.Vertical - size.Height) / 2 + padding.Top;
+            }
+            return new Rectangle(x, y, size.Width, size.Height);
         }
 
         /// <summary>
@@ -286,7 +255,7 @@ namespace LeonDirectUI.Painter
                 {
                     graphics2.DrawImage(image, new Rectangle(0, 0, size.Width, size.Height), 0, 0, size.Width, size.Height, GraphicsUnit.Pixel, disabledImageAttr);
                 }
-                graphics.DrawImageUnscaled(bitmap, imageBounds);
+                graphics.DrawImageUnscaled(image, imageBounds);
                 return;
             }
         }

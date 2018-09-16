@@ -57,7 +57,7 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 背景颜色
         /// </summary>
-        public virtual Color BackColor { get; set; } = Color.WhiteSmoke;
+        public virtual Color BackColor { get; set; } = Color.Transparent;
 
         /// <summary>
         /// 字体颜色

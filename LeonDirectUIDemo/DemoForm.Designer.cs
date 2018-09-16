@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DemoForm));
             this.button1 = new System.Windows.Forms.Button();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.customContainer1 = new LeonDirectUIDemo.CustomContainer();
@@ -75,7 +74,7 @@
             this.customContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.customContainer1.Location = new System.Drawing.Point(5, 5);
             this.customContainer1.Name = "customContainer1";
-            this.customContainer1.PreviewImage = ((System.Drawing.Image)(resources.GetObject("customContainer1.PreviewImage")));
+            this.customContainer1.PreviewImage = global::LeonDirectUIDemo.UIResource.white_emoticons_04;
             this.customContainer1.Size = new System.Drawing.Size(626, 163);
             this.customContainer1.TabIndex = 0;
             this.customContainer1.Title = "我是标题标签哦~";
