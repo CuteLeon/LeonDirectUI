@@ -25,9 +25,6 @@ namespace LeonDirectUI.Painter
 
             if (graphics == null) throw new Exception("绘制器使用了空的 Graphics");
             if (control == null) throw new Exception("绘制器绘制空的 ControlBase");
-
-            //绘制文本对齐和换行：https://www.cnblogs.com/dannyqiu/articles/2837515.html
-            //TODO: 实现绘制方法逻辑
             //Console.WriteLine(control.Name);
 
             //绘制背景色和图像
@@ -49,6 +46,16 @@ namespace LeonDirectUI.Painter
                 control.Padding,
                 control.Enabled);
 
+            if (!string.IsNullOrEmpty(control.Text))
+                DrawText(
+                    graphics,
+                    control.Text,
+                    control.Font,
+                    control.ForeColor,
+                    control.Rectangle,
+                    control.Enabled,
+                    control.BackColor,
+                    control.TextAlign);
             /*
             control.Font;
             control.ForeColor;

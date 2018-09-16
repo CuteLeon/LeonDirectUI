@@ -221,7 +221,7 @@ namespace LeonDirectUI.Painter
             }
             else
             {
-                DrawImageDisabled(graphics, image, ImageRectangle,SourceRectangle);
+                DrawImageDisabled(graphics, image, ImageRectangle, SourceRectangle);
             }
 
             //graphics.DrawRectangle(Pens.Blue, ImageRectangle.Left, ImageRectangle.Top, ImageRectangle.Width - 1, ImageRectangle.Height - 1);
@@ -235,9 +235,9 @@ namespace LeonDirectUI.Painter
         /// <param name="imageRectangle">绘制区域</param>
         /// <param name="sourceRectangle">图像剪切区域</param>
         protected static void DrawImageDisabled(
-            Graphics graphics, 
-            Image image, 
-            Rectangle imageRectangle, 
+            Graphics graphics,
+            Image image,
+            Rectangle imageRectangle,
             Rectangle sourceRectangle)
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
@@ -260,17 +260,92 @@ namespace LeonDirectUI.Painter
             }
 
             graphics.DrawImage(
-                image, 
-                imageRectangle, 
-                sourceRectangle.Left, 
-                sourceRectangle.Top, 
-                sourceRectangle.Width, 
-                sourceRectangle.Height, 
-                GraphicsUnit.Pixel, 
+                image,
+                imageRectangle,
+                sourceRectangle.Left,
+                sourceRectangle.Top,
+                sourceRectangle.Width,
+                sourceRectangle.Height,
+                GraphicsUnit.Pixel,
                 DisabledImageAttr
                 );
         }
 
+        //TODO: 整理一下代码并写注释
+        protected static void DrawText(Graphics graphics,string Text,Font font,Color forcolor, Rectangle rectangle, bool Enabled,Color backcolor,ContentAlignment align)
+        {
+            using (StringFormat stringFormat = CreateStringFormat(align, true))
+            {
+                if (Enabled)
+                {
+                    using (Brush brush = new SolidBrush(forcolor))
+                    {
+                        graphics.DrawString(Text, font, brush, rectangle, stringFormat);
+                    }
+                }
+                else
+                {
+                    ControlPaint.DrawStringDisabled(graphics, Text, font, Color.Gray, rectangle, stringFormat);
+                }
+            }
+        }
+
+        static StringFormat CreateStringFormat(ContentAlignment textAlign, bool showEllipsis)
+        {
+            StringFormat stringFormat = StringFormatForAlignment(textAlign);
+            if (showEllipsis)
+            {
+                stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+                stringFormat.FormatFlags |= StringFormatFlags.LineLimit;
+            }
+            //stringFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
+            return stringFormat;
+        }
+
+        internal static StringFormat StringFormatForAlignment(System.Drawing.ContentAlignment align)
+        {
+            return new StringFormat
+            {
+                Alignment = TranslateAlignment(align),
+                LineAlignment = TranslateLineAlignment(align)
+            };
+        }
+
+        internal static StringAlignment TranslateAlignment(System.Drawing.ContentAlignment align)
+        {
+            StringAlignment result;
+            if ((align & AnyRightAlign) != (System.Drawing.ContentAlignment)0)
+            {
+                result = StringAlignment.Far;
+            }
+            else if ((align & AnyCenterAlign) != (System.Drawing.ContentAlignment)0)
+            {
+                result = StringAlignment.Center;
+            }
+            else
+            {
+                result = StringAlignment.Near;
+            }
+            return result;
+        }
+
+        internal static StringAlignment TranslateLineAlignment(System.Drawing.ContentAlignment align)
+        {
+            StringAlignment result;
+            if ((align & AnyBottomAlign) != (System.Drawing.ContentAlignment)0)
+            {
+                result = StringAlignment.Far;
+            }
+            else if ((align & AnyMiddleAlign) != (System.Drawing.ContentAlignment)0)
+            {
+                result = StringAlignment.Center;
+            }
+            else
+            {
+                result = StringAlignment.Near;
+            }
+            return result;
+        }
         #endregion
 
     }
