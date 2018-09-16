@@ -255,6 +255,13 @@ namespace LeonDirectUI.DUIControl
         public virtual bool Contains(int x, int y) => Papa.Contains(x, y);
 
         /// <summary>
+        /// 目标点是否包含在区域内
+        /// </summary>
+        /// <param name="point">目标坐标</param>
+        /// <returns></returns>
+        public virtual bool Contains(Point point) => Papa.Contains(point);
+
+        /// <summary>
         /// 将区域放大指定量
         /// </summary>
         /// <param name="width">放大宽度</param>
@@ -379,6 +386,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnClick(EventArgs e)
         {
+            //Console.WriteLine($"{Name} : 点击");
             if (Visible && Enabled)
             {
                 //MouseState = MouseStates.Press;
@@ -393,6 +401,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnDoubleClick(EventArgs e)
         {
+            //Console.WriteLine($"{Name} : 双击");
             if (Visible && Enabled)
             {
                 //MouseState = MouseStates.Press;
@@ -407,6 +416,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnMouseEnter(EventArgs e)
         {
+            //Console.WriteLine($"{Name} : 鼠标进入");
             if (Visible && Enabled)
             {
                 MouseState = MouseStates.Hover;
@@ -420,6 +430,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnMouseMove(MouseEventArgs e)
         {
+            //Console.WriteLine($"{Name} : 鼠标移动");
             if (Visible && Enabled)
             {
                 MouseState = MouseStates.Hover;
@@ -433,6 +444,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnMouseHover(EventArgs e)
         {
+            //Console.WriteLine($"{Name} : 鼠标悬停");
             if (Visible && Enabled)
             {
                 MouseState = MouseStates.Hover;
@@ -446,6 +458,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnMouseDown(MouseEventArgs e)
         {
+            //Console.WriteLine($"{Name} : 鼠标按压");
             if (Visible && Enabled)
             {
                 MouseState = MouseStates.Press;
@@ -459,6 +472,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnMouseUp(MouseEventArgs e)
         {
+            //Console.WriteLine($"{Name} : 鼠标抬起");
             if (Visible && Enabled)
             {
                 MouseState = MouseStates.Hover;
@@ -472,6 +486,7 @@ namespace LeonDirectUI.DUIControl
         /// <param name="e"></param>
         public void OnMouseLeave(EventArgs e)
         {
+            //Console.WriteLine($"{Name} : 鼠标离开");
             if (Visible && Enabled)
             {
                 MouseState = MouseStates.Normal;

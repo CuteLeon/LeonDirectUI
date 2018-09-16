@@ -33,6 +33,12 @@ namespace LeonDirectUI.Container
         [Browsable(false)]
         public IPainter Painter { get; protected set; } = new CommonPainter();
 
+        /// <summary>
+        /// 当前鼠标进入的虚拟控件
+        /// </summary>
+        [Browsable(false)]
+        public ControlBase ActiveControl { get; protected set; } = null;
+
         #endregion
 
         #region 基础属性
@@ -139,6 +145,158 @@ namespace LeonDirectUI.Container
         /// <param name="width"></param>
         /// <param name="height"></param>
         public abstract void ResetSize(int width, int height);
+
+        #endregion
+
+        #region 触发事件
+
+        /// <summary>
+        /// 点击
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnClick(EventArgs e)
+        {
+            Point mousePoint= this.PointToClient(MousePosition);
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+            
+            if (control == null)
+                base.OnClick(e);
+            else
+                control.OnClick(e);
+        }
+
+        /// <summary>
+        /// 双击
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnDoubleClick(EventArgs e)
+        {
+            Point mousePoint = this.PointToClient(MousePosition);
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+
+            if (control == null)
+                base.OnDoubleClick(e);
+            else
+                control.OnDoubleClick(e);
+        }
+
+        /// <summary>
+        /// 鼠标移动
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(e.Location));
+
+            //激活控件发生变化
+            if (ActiveControl != control)
+            {
+                if (ActiveControl != null)
+                {
+                    //通知之前的激活控件"鼠标离开"
+                    ActiveControl.OnMouseLeave(EventArgs.Empty);
+                }
+                //更新激活控件
+                ActiveControl = control;
+                if (ActiveControl != null)
+                {
+                    //通知新的激活控件"鼠标进入"和"鼠标移动"
+                    ActiveControl.OnMouseEnter(EventArgs.Empty);
+                    ActiveControl.OnMouseMove(e);
+                }
+            }
+            else
+            {
+                if (ActiveControl != null)
+                {
+                    ActiveControl.OnMouseMove(e);
+                }
+                else
+                {
+                    base.OnMouseMove(e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 鼠标悬停
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseHover(EventArgs e)
+        {
+            Point mousePoint = this.PointToClient(MousePosition);
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+
+            if (control == null)
+                base.OnMouseHover(e);
+            else
+                control.OnMouseHover(e);
+        }
+
+        /// <summary>
+        /// 鼠标按压
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(e.Location));
+
+            if (control == null)
+                base.OnMouseDown(e);
+            else
+                control.OnMouseDown(e);
+        }
+
+        /// <summary>
+        /// 鼠标抬起
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(e.Location));
+
+            if (control == null)
+                base.OnMouseUp(e);
+            else
+                control.OnMouseUp(e);
+        }
+
+        /// <summary>
+        /// 鼠标进入
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            Point mousePoint = this.PointToClient(MousePosition);
+            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+
+            if (control == null)
+            {
+                base.OnMouseEnter(e);
+            }
+            else
+            {
+                ActiveControl = control;
+                ActiveControl.OnMouseEnter(e);
+            }
+        }
+
+        /// <summary>
+        /// 鼠标离开
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            if (ActiveControl != null)
+            {
+                ActiveControl.OnMouseLeave(e);
+                ActiveControl = null;
+            }
+            else
+            {
+                base.OnMouseLeave(e);
+            }
+        }
 
         #endregion
 

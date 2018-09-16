@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LeonDirectUIDemo
 {
@@ -83,21 +84,31 @@ namespace LeonDirectUIDemo
             TitleLabel.ForeColor = Color.Orange;
             TitleLabel.BackColor = Color.DarkGray;
             TitleLabel.Font = new Font(TitleLabel.Font, FontStyle.Bold);
+            TitleLabel.Click += (s, e) => { Console.WriteLine("点击标题区域"); };
+            TitleLabel.DoubleClick += (s, e) => { Console.WriteLine("双击标题区域"); };
 
             PreviewImageBox.Name = "预览图像框";
             PreviewImageBox.BackColor = Color.Silver;
             PreviewImageBox.Image = UIResource.white_emoticons_04;
             PreviewImageBox.ImageAlign = ContentAlignment.MiddleCenter;
+            PreviewImageBox.Click += (s, e) => { Console.WriteLine("点击预览图像区域"); };
 
             DescriptionLabel.Name = "描述标签";
             DescriptionLabel.Text = "我是一个自适应的描述标签";
             DescriptionLabel.BackColor = Color.LightGray;
             DescriptionLabel.ForeColor = Color.Gray;
+            DescriptionLabel.Click += (s, e) => { Console.WriteLine("点击描述文本区域"); };
 
             CloseButton.Name = "关闭按钮";
             CloseButton.Text = "X";
             CloseButton.BackColor = Color.FromArgb(150, 240, 240, 240);
             CloseButton.TextAlign = ContentAlignment.MiddleCenter;
+            CloseButton.Click += (s, e) => {
+                if (MessageBox.Show("确定要关闭吗？","关闭？", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    Application.Exit();
+                }
+            };
         }
         
         /// <summary>
