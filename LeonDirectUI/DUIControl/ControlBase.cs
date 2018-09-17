@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 namespace LeonDirectUI.DUIControl
 {
+    //TODO: 增加 MaxSize 和 MinSize 属性
+
     /// <summary>
     /// 控件基类
     /// </summary>
@@ -67,6 +69,20 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 _text = value;
+                PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
+
+        private bool _showEllipsis = false;
+        /// <summary>
+        /// 显示省略号
+        /// </summary>
+        public bool ShowEllipsis
+        {
+            get => _showEllipsis;
+            set
+            {
+                _showEllipsis = value;
                 PaintRequired?.Invoke(this, Rectangle);
             }
         }

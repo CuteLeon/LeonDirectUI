@@ -13,10 +13,11 @@ using LeonDirectUI.Painter;
 
 namespace LeonDirectUI.Container
 {
+
     /// <summary>
     /// 容器基类
     /// </summary>
-    public abstract class ContainerBase : Control, Interface.IContainer
+    public abstract class ContainerBase : Control, Interface.IContainer, IDisposable
     {
 
         #region 基础字段
@@ -84,6 +85,15 @@ namespace LeonDirectUI.Container
             Painter = painter ?? throw new Exception("注入绘制器为空");
             //切换绘制器后重绘
             this.Invalidate();
+        }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public new void Dispose()
+        {
+            //TODO: 移除所有虚拟控件，间接触发 ControlCollection 的移除事件取消虚拟控件的关联关系和事件订阅
+            base.Dispose();
         }
 
         #endregion

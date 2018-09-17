@@ -56,6 +56,7 @@ namespace LeonDirectUI.Painter
             Rectangle bounds)
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
+            if (bounds.Width <= 0 || bounds.Height <= 0) return;
 
             //绘制背景颜色
             if (backColor != Color.Transparent)
@@ -166,6 +167,7 @@ namespace LeonDirectUI.Painter
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
             if (image == null) throw new ArgumentNullException("image");
+            if (bounds.Width <= 0 || bounds.Height <= 0) return;
 
             //测试 Padding
             Rectangle ImageRectangle = new Rectangle(bounds.Location, image.Size);
@@ -223,8 +225,6 @@ namespace LeonDirectUI.Painter
             {
                 DrawImageDisabled(graphics, image, ImageRectangle, SourceRectangle);
             }
-
-            //graphics.DrawRectangle(Pens.Blue, ImageRectangle.Left, ImageRectangle.Top, ImageRectangle.Width - 1, ImageRectangle.Height - 1);
         }
 
         /// <summary>
@@ -242,10 +242,12 @@ namespace LeonDirectUI.Painter
         {
             if (graphics == null) throw new ArgumentNullException("graphics");
             if (image == null) throw new ArgumentNullException("image");
+            if (imageRectangle.Width <= 0 || imageRectangle.Height <= 0) return;
+            if (sourceRectangle.Width <= 0 || sourceRectangle.Height <= 0) return;
 
+            //懒汉初始化
             if (DisabledImageAttr == null)
             {
-                //初始化
                 float[][] array = new float[][] {
                     new float[] { 0.2125f, 0.2125f, 0.2125f, 0f, 0f },
                     new float[] { 0.2577f, 0.2577f, 0.2577f, 0f, 0f },
@@ -271,54 +273,94 @@ namespace LeonDirectUI.Painter
                 );
         }
 
-        //TODO: 整理一下代码并写注释
-        protected static void DrawText(Graphics graphics,string Text,Font font,Color forcolor, Rectangle rectangle, bool Enabled,Color backcolor,ContentAlignment align)
+        /// <summary>
+        /// 绘制文本
+        /// </summary>
+        /// <param name="graphics">绘制对象</param>
+        /// <param name="text">绘制文本</param>
+        /// <param name="font">字体</param>
+        /// <param name="forcolor">字体颜色</param>
+        /// <param name="align">文本对齐方式</param>
+        /// <param name="enabled">是否为可用样式</param>
+        /// <param name="showEllipsis">是否显示省略号</param>
+        /// <param name="bounds">绘制区域边界</param>
+        /// <param name="padding">绘制区域内边界</param>
+        protected static void DrawText(
+            Graphics graphics,
+            string text,
+            Font font,
+            Color forcolor, 
+            ContentAlignment align,
+            bool enabled,
+            bool showEllipsis,
+            Rectangle bounds, 
+            Padding padding
+            )
         {
-            using (StringFormat stringFormat = CreateStringFormat(align, true))
+            if (bounds.Width <= 0 || bounds.Height <= 0) return;
+
+            using (StringFormat stringFormat = CreateStringFormat(align, showEllipsis))
             {
-                if (Enabled)
+                //根据内边距调整绘制区域
+                bounds.Offset(padding.Left, padding.Top);
+                bounds.Inflate(-padding.Horizontal,-padding.Vertical);
+                if (bounds.Width <= 0 || bounds.Height <= 0) return;
+
+                if (enabled)
                 {
                     using (Brush brush = new SolidBrush(forcolor))
                     {
-                        graphics.DrawString(Text, font, brush, rectangle, stringFormat);
+                        graphics.DrawString(text, font, brush, bounds, stringFormat);
                     }
                 }
                 else
                 {
-                    ControlPaint.DrawStringDisabled(graphics, Text, font, Color.Gray, rectangle, stringFormat);
+                    //绘制禁用样式的文本，可传入禁用样式的字体颜色
+                    ControlPaint.DrawStringDisabled(graphics, text, font, Color.Gray, bounds, stringFormat);
                 }
             }
         }
 
-        static StringFormat CreateStringFormat(ContentAlignment textAlign, bool showEllipsis)
+        /// <summary>
+        /// 创建文本格式
+        /// </summary>
+        /// <param name="textAlign"></param>
+        /// <param name="showEllipsis"></param>
+        /// <returns></returns>
+        protected static StringFormat CreateStringFormat(ContentAlignment textAlign, bool showEllipsis)
         {
-            StringFormat stringFormat = StringFormatForAlignment(textAlign);
+            StringFormat stringFormat = new StringFormat
+            {
+                //设置水平对齐方式
+                Alignment = TranslateAlignment(textAlign),
+                //设置垂直对齐方式
+                LineAlignment = TranslateLineAlignment(textAlign)
+            };
+
+            //设置省略显示方式
             if (showEllipsis)
             {
+                //设置为显示省略号（也可以划词而不显示省略号）
                 stringFormat.Trimming = StringTrimming.EllipsisCharacter;
                 stringFormat.FormatFlags |= StringFormatFlags.LineLimit;
             }
-            //stringFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
+
             return stringFormat;
         }
 
-        internal static StringFormat StringFormatForAlignment(System.Drawing.ContentAlignment align)
-        {
-            return new StringFormat
-            {
-                Alignment = TranslateAlignment(align),
-                LineAlignment = TranslateLineAlignment(align)
-            };
-        }
-
-        internal static StringAlignment TranslateAlignment(System.Drawing.ContentAlignment align)
+        /// <summary>
+        /// 转换水平对齐方式
+        /// </summary>
+        /// <param name="align"></param>
+        /// <returns></returns>
+        protected static StringAlignment TranslateAlignment(ContentAlignment align)
         {
             StringAlignment result;
-            if ((align & AnyRightAlign) != (System.Drawing.ContentAlignment)0)
+            if ((align & AnyRightAlign) != (ContentAlignment)0)
             {
                 result = StringAlignment.Far;
             }
-            else if ((align & AnyCenterAlign) != (System.Drawing.ContentAlignment)0)
+            else if ((align & AnyCenterAlign) != (ContentAlignment)0)
             {
                 result = StringAlignment.Center;
             }
@@ -329,14 +371,19 @@ namespace LeonDirectUI.Painter
             return result;
         }
 
-        internal static StringAlignment TranslateLineAlignment(System.Drawing.ContentAlignment align)
+        /// <summary>
+        /// 转换垂直对齐方式
+        /// </summary>
+        /// <param name="align"></param>
+        /// <returns></returns>
+        protected static StringAlignment TranslateLineAlignment(ContentAlignment align)
         {
             StringAlignment result;
-            if ((align & AnyBottomAlign) != (System.Drawing.ContentAlignment)0)
+            if ((align & AnyBottomAlign) != (ContentAlignment)0)
             {
                 result = StringAlignment.Far;
             }
-            else if ((align & AnyMiddleAlign) != (System.Drawing.ContentAlignment)0)
+            else if ((align & AnyMiddleAlign) != (ContentAlignment)0)
             {
                 result = StringAlignment.Center;
             }
@@ -346,6 +393,7 @@ namespace LeonDirectUI.Painter
             }
             return result;
         }
+
         #endregion
 
     }

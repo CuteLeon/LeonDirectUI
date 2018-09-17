@@ -46,6 +46,7 @@
     <Compile Include="Container\ContainerBase.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Container\ControlCollection.cs" />
     <Compile Include="DUIControl\ControlBase.cs" />
     <Compile Include="Interface\IContainer.cs" />
     <Compile Include="Interface\IMouseable.cs" />

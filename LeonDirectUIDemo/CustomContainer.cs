@@ -79,6 +79,7 @@ namespace LeonDirectUIDemo
             TitleLabel.Text = "我是标题标签哦~";
             TitleLabel.ForeColor = Color.Orange;
             TitleLabel.BackColor = Color.DarkGray;
+            TitleLabel.ShowEllipsis = true;
             TitleLabel.Font = new Font(TitleLabel.Font, FontStyle.Bold);
             TitleLabel.Click += (s, e) => { Console.WriteLine("点击标题区域"); };
             TitleLabel.DoubleClick += (s, e) => { Console.WriteLine("双击标题区域"); };
@@ -93,6 +94,7 @@ namespace LeonDirectUIDemo
             DescriptionLabel.Text = "我是一个自适应的描述标签";
             DescriptionLabel.BackColor = Color.LightGray;
             DescriptionLabel.ForeColor = Color.Gray;
+            DescriptionLabel.ShowEllipsis = true;
             DescriptionLabel.Click += (s, e) => { Console.WriteLine("点击描述文本区域"); };
 
             CloseButton.Name = "关闭按钮";

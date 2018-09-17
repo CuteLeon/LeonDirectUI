@@ -52,16 +52,12 @@ namespace LeonDirectUI.Painter
                     control.Text,
                     control.Font,
                     control.ForeColor,
-                    control.Rectangle,
+                    control.TextAlign,
                     control.Enabled,
-                    control.BackColor,
-                    control.TextAlign);
-            /*
-            control.Font;
-            control.ForeColor;
-            control.Text;
-            control.TextAlign;
-             */
+                    control.ShowEllipsis,
+                    control.Rectangle,
+                    control.Padding
+                    );
 
             graphics.DrawRectangle(Pens.Red, control.Left, control.Top, control.Width-1, control.Height-1);
         }
