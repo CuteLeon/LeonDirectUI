@@ -92,7 +92,16 @@ namespace LeonDirectUI.Container
         /// </summary>
         public new void Dispose()
         {
-            //TODO: 移除所有虚拟控件，间接触发 ControlCollection 的移除事件取消虚拟控件的关联关系和事件订阅
+            //取消订阅控件列表内的虚拟控件的请求订阅并移除虚拟控件
+            while (Controls.Count>0)
+            {
+                try
+                {
+                    Controls[0].PaintRequired -= Control_PaintRequired;
+                    Controls.RemoveAt(0);
+                }
+                catch { }
+            }
             base.Dispose();
         }
 
@@ -153,7 +162,8 @@ namespace LeonDirectUI.Container
         /// </summary>
         /// <param name="sender">请求绘制的子虚拟控件</param>
         /// <param name="rectangle">涉及的区域</param>
-        protected void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
+        //TODO: [提醒] 虚拟控件动态注册到控件容器后需要订阅 PaintRequired 事件到此方法以接收绘制请求；
+        public void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
             if (sender == null) throw new Exception("空的虚拟控件请求了绘制");
             if ((sender.Width <= 0 || rectangle.Height <= 0) &&

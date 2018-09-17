@@ -2,6 +2,7 @@
 using LeonDirectUI.VisualStyle;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ using System.Windows.Forms;
 
 namespace LeonDirectUI.DUIControl
 {
-    //TODO: 增加 MaxSize 和 MinSize 属性
+    //TODO: SuspendLayout 和 ResumeLayout 方法密集调整省略计算
+    //TODO: SuspendPaint 和 ResumePaint 方法密集刷新时省略绘制
 
     /// <summary>
     /// 控件基类
@@ -19,7 +21,7 @@ namespace LeonDirectUI.DUIControl
     {
 
         #region 基本属性
-        //TODO: [提醒] 可见性和可用性影响显示效果和交互效果
+        //TODO: [提醒] [需要测试] 可见性和可用性影响显示效果和交互效果
 
         /// <summary>
         /// 控件的名称
@@ -51,6 +53,52 @@ namespace LeonDirectUI.DUIControl
             {
                 _visible = value;
                 if (value) PaintRequired?.Invoke(this, Rectangle);
+            }
+        }
+
+        private Size _maxSize = Size.Empty;
+        /// <summary>
+        /// 最大尺寸
+        /// </summary>
+        [AmbientValue(typeof(Size), "0, 0")]
+        public virtual Size MaxSize
+        {
+            get => _maxSize;
+            set
+            {
+                if (value.Width < 0) value.Width = 0;
+                if (value.Height < 0) value.Height = 0;
+                if (value.Width > 0 && value.Width < _minSize.Width) _minSize.Width = value.Width;
+                if (value.Height > 0 && value.Height < _minSize.Height) _minSize.Height = value.Height;
+
+                _maxSize = value;
+
+                if ((_maxSize.Width != 0 && _maxSize.Height != 0) &&
+                    (_maxSize.Width < Width || _maxSize.Height < Height))
+                    SetSize(Math.Min(Width, value.Width), Math.Min(Height, value.Height));
+            }
+        }
+
+        private Size _minSize=Size.Empty;
+        /// <summary>
+        /// 最小尺寸
+        /// </summary>
+        [AmbientValue(typeof(Size), "0, 0")]
+        public virtual Size MinSize
+        {
+            get => _minSize;
+            set
+            {
+                if (value.Width < 0) value.Width = 0;
+                if (value.Height < 0) value.Height = 0;
+                if (value.Width > 0 && value.Width > _maxSize.Width) _maxSize.Width = value.Width;
+                if (value.Height > 0 && value.Height > _maxSize.Height) _maxSize.Height = value.Height;
+                
+                _minSize = value;
+
+                if ((_minSize.Width != 0 && _minSize.Height != 0) &&
+                    (_minSize.Width > Width || _minSize.Height > Height))
+                    SetSize(Math.Max(Width, value.Width), Math.Max(Height, value.Height));
             }
         }
 
@@ -223,6 +271,16 @@ namespace LeonDirectUI.DUIControl
         private Rectangle Papa = Rectangle.Empty;
 
         /// <summary>
+        /// 右边界
+        /// </summary>
+        public virtual int Right { get => Papa.Right; }
+
+        /// <summary>
+        /// 下边界
+        /// </summary>
+        public virtual int Bottom { get => Papa.Bottom; }
+
+        /// <summary>
         /// 左坐标
         /// </summary>
         public virtual int Left
@@ -260,6 +318,8 @@ namespace LeonDirectUI.DUIControl
             {
                 Rectangle lastRectangle = Rectangle;
                 Papa.Width = Math.Max(value, 0);
+                if (MinSize.Width > 0) Papa.Width = Math.Max(MinSize.Width, Papa.Width);
+                if (MaxSize.Width > 0) Papa.Width = Math.Min(MaxSize.Width, Papa.Width);
                 PaintRequired?.Invoke(this, lastRectangle);
             }
         }
@@ -274,19 +334,11 @@ namespace LeonDirectUI.DUIControl
             {
                 Rectangle lastRectangle = Rectangle;
                 Papa.Height = Math.Max(value, 0);
+                if (MinSize.Height > 0) Papa.Height = Math.Max(MinSize.Height, Papa.Height);
+                if (MaxSize.Height > 0) Papa.Height = Math.Min(MaxSize.Height, Papa.Height);
                 PaintRequired?.Invoke(this, lastRectangle);
             }
         }
-
-        /// <summary>
-        /// 右边界
-        /// </summary>
-        public virtual int Right { get => Papa.Right; }
-
-        /// <summary>
-        /// 下边界
-        /// </summary>
-        public virtual int Bottom { get => Papa.Bottom; }
 
         /// <summary>
         /// 显示区域
@@ -296,12 +348,7 @@ namespace LeonDirectUI.DUIControl
             get => Papa;
             set
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.X = value.Left;
-                Papa.Y = value.Top;
-                Papa.Width = Math.Max(value.Width, 0);
-                Papa.Height = Math.Max(value.Height, 0);
-                PaintRequired?.Invoke(this, lastRectangle);
+                SetBounds(value.Left, value.Top, value.Width, value.Height);
             }
         }
 
@@ -313,10 +360,7 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Size;
             set
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.Width = Math.Max(value.Width, 0);
-                Papa.Height = Math.Max(value.Height, 0);
-                PaintRequired?.Invoke(this, lastRectangle);
+                SetSize(value.Width, value.Height);
             }
         }
 
@@ -328,9 +372,7 @@ namespace LeonDirectUI.DUIControl
             get => Papa.Location;
             set
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.Location = value;
-                PaintRequired?.Invoke(this, lastRectangle);
+                SetLocation(value.X, value.Y);
             }
         }
 
@@ -348,6 +390,10 @@ namespace LeonDirectUI.DUIControl
             Papa.Y = top;
             Papa.Width = Math.Max(width, 0);
             Papa.Height = Math.Max(height, 0);
+            if (MinSize.Width > 0) Papa.Width = Math.Max(MinSize.Width, Papa.Width);
+            if (MaxSize.Width > 0) Papa.Width = Math.Min(MaxSize.Width, Papa.Width);
+            if (MinSize.Height > 0) Papa.Height = Math.Max(MinSize.Height, Papa.Height);
+            if (MaxSize.Height > 0) Papa.Height = Math.Min(MaxSize.Height, Papa.Height);
             PaintRequired?.Invoke(this, lastRectangle);
         }
 
@@ -361,6 +407,10 @@ namespace LeonDirectUI.DUIControl
             Rectangle lastRectangle = Rectangle;
             Papa.Width = Math.Max(width, 0);
             Papa.Height = Math.Max(height, 0);
+            if (MinSize.Width > 0) Papa.Width = Math.Max(MinSize.Width, Papa.Width);
+            if (MaxSize.Width > 0) Papa.Width = Math.Min(MaxSize.Width, Papa.Width);
+            if (MinSize.Height > 0) Papa.Height = Math.Max(MinSize.Height, Papa.Height);
+            if (MaxSize.Height > 0) Papa.Height = Math.Min(MaxSize.Height, Papa.Height);
             PaintRequired?.Invoke(this, lastRectangle);
         }
 
@@ -374,6 +424,50 @@ namespace LeonDirectUI.DUIControl
             Rectangle lastRectangle = Rectangle;
             Papa.X = left;
             Papa.Y = top;
+            PaintRequired?.Invoke(this, lastRectangle);
+        }
+
+        /// <summary>
+        /// 将区域放大指定量
+        /// </summary>
+        /// <param name="width">放大宽度</param>
+        /// <param name="height">放大高度</param>
+        public virtual void Inflate(int width, int height)
+        {
+            Rectangle lastRectangle = Rectangle;
+            Papa.Inflate(width, height);
+            Papa.Width = Math.Max(Papa.Width, 0);
+            Papa.Height = Math.Max(Papa.Height, 0);
+            if (MinSize.Width > 0) Papa.Width = Math.Max(MinSize.Width, Papa.Width);
+            if (MaxSize.Width > 0) Papa.Width = Math.Min(MaxSize.Width, Papa.Width);
+            if (MinSize.Height > 0) Papa.Height = Math.Max(MinSize.Height, Papa.Height);
+            if (MaxSize.Height > 0) Papa.Height = Math.Min(MaxSize.Height, Papa.Height);
+            PaintRequired?.Invoke(this, lastRectangle);
+        }
+
+        /// <summary>
+        /// 将区域替换为与目标区域的交集
+        /// </summary>
+        /// <param name="rect">目标区域</param>
+        public virtual void Intersect(Rectangle rect)
+        {
+            Rectangle lastRectangle = Rectangle;
+            Papa.Intersect(rect);
+            if (MinSize.Width > 0) Papa.Width = Math.Max(MinSize.Width, Papa.Width);
+            if (MaxSize.Width > 0) Papa.Width = Math.Min(MaxSize.Width, Papa.Width);
+            if (MinSize.Height > 0) Papa.Height = Math.Max(MinSize.Height, Papa.Height);
+            if (MaxSize.Height > 0) Papa.Height = Math.Min(MaxSize.Height, Papa.Height);
+            PaintRequired?.Invoke(this, lastRectangle);
+        }
+
+        /// <summary>
+        /// 将区域调整指定的量
+        /// </summary>
+        /// <param name="point"></param>
+        public virtual void Offset(Point point)
+        {
+            Rectangle lastRectangle = Rectangle;
+            Papa.Offset(point);
             PaintRequired?.Invoke(this, lastRectangle);
         }
 
@@ -397,29 +491,11 @@ namespace LeonDirectUI.DUIControl
         public virtual bool Contains(Point point) => Papa.Contains(point);
 
         /// <summary>
-        /// 将区域放大指定量
+        /// 目标区域是否完全包含在区域内
         /// </summary>
-        /// <param name="width">放大宽度</param>
-        /// <param name="height">放大高度</param>
-        public virtual void Inflate(int width, int height)
-        {
-            Rectangle lastRectangle = Rectangle;
-            Papa.Inflate(width, height);
-            Papa.Width = Math.Max(Papa.Width, 0);
-            Papa.Height = Math.Max(Papa.Height, 0);
-            PaintRequired?.Invoke(this, lastRectangle);
-        }
-
-        /// <summary>
-        /// 将区域替换为与目标区域的交集
-        /// </summary>
-        /// <param name="rect">目标区域</param>
-        public virtual void Intersect(Rectangle rect)
-        {
-            Rectangle lastRectangle = Rectangle;
-            Papa.Intersect(rect);
-            PaintRequired?.Invoke(this, lastRectangle);
-        }
+        /// <param name="rectangle">目标区域</param>
+        /// <returns></returns>
+        public virtual bool Contains(Rectangle rectangle) => Papa.Contains(rectangle);
 
         /// <summary>
         /// 是否与目标区域相交
@@ -433,17 +509,6 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         /// <returns></returns>
         public virtual bool IsEmpty() => Papa.IsEmpty;
-
-        /// <summary>
-        /// 将区域调整指定的量
-        /// </summary>
-        /// <param name="point"></param>
-        public virtual void Offset(Point point)
-        {
-            Rectangle lastRectangle = Rectangle;
-            Papa.Offset(point);
-            PaintRequired?.Invoke(this, lastRectangle);
-        }
 
         #endregion
 

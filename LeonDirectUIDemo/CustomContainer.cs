@@ -115,7 +115,7 @@ namespace LeonDirectUIDemo
                     CloseButton.Text = "确定要关闭吗？";
                     while (CloseButton.Width < 120)
                     {
-                        CloseButton.Width += 10;
+                        CloseButton.Width += 20;
                         CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
                         TitleLabel.Width = CloseButton.Left;
                         Thread.Sleep(10);
@@ -132,7 +132,7 @@ namespace LeonDirectUIDemo
                     CloseButton.Text = "X";
                     while (CloseButton.Width > 28)
                     {
-                        CloseButton.Width -= 10;
+                        CloseButton.Width -= 20;
                         CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
                         TitleLabel.Width = CloseButton.Left;
                         Thread.Sleep(10);
