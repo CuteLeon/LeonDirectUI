@@ -532,6 +532,12 @@ namespace LeonDirectUI.DUIControl
 
         #region 容器访问方法
 
+        //触发绘制请求
+        public void OnPaintRequired()
+        {
+            PaintRequired?.Invoke(this, Rectangle);
+        }
+
         /// <summary>
         /// 点击
         /// </summary>

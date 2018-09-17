@@ -156,7 +156,8 @@ namespace LeonDirectUI.Container
         protected void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
             if (sender == null) throw new Exception("空的虚拟控件请求了绘制");
-            if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
+            if ((sender.Width <= 0 || rectangle.Height <= 0) &&
+                (sender.Width <= 0 || sender.Height <= 0)) return;
 
             //绘制请求绘制的虚拟控件和与绘制区域有交集的可见虚拟控件
             using (Graphics graphics = this.CreateGraphics())

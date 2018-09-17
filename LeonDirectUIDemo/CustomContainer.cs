@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -78,13 +79,18 @@ namespace LeonDirectUIDemo
             TitleLabel.Name = "标题标签";
             TitleLabel.Text = "我是标题标签哦~";
             TitleLabel.ForeColor = Color.Orange;
-            TitleLabel.BackColor = Color.DarkGray;
+            TitleLabel.BackColor = Color.Gray;
             TitleLabel.ShowEllipsis = true;
             TitleLabel.Font = new Font(TitleLabel.Font, FontStyle.Bold);
             TitleLabel.Click += (s, e) => { Console.WriteLine("点击标题区域"); };
             TitleLabel.DoubleClick += (s, e) => { Console.WriteLine("双击标题区域"); };
+            TitleLabel.MouseEnter += (s, e) => { TitleLabel.ForeColor = Color.OrangeRed; };
+            TitleLabel.MouseLeave += (s, e) => { TitleLabel.ForeColor = Color.Orange; };
+            TitleLabel.MouseDown += (s, e) => { TitleLabel.ForeColor = Color.Chocolate; };
+            TitleLabel.MouseUp += (s, e) => { TitleLabel.ForeColor = Color.OrangeRed; };
 
             PreviewImageBox.Name = "预览图像框";
+            PreviewImageBox.Text = string.Empty;
             PreviewImageBox.BackColor = Color.Silver;
             PreviewImageBox.Image = UIResource.white_emoticons_04;
             PreviewImageBox.ImageAlign = ContentAlignment.MiddleCenter;
@@ -99,16 +105,28 @@ namespace LeonDirectUIDemo
 
             CloseButton.Name = "关闭按钮";
             CloseButton.Text = "X";
-            CloseButton.BackColor = Color.FromArgb(150, 240, 240, 240);
+            CloseButton.BackColor = Color.DarkGray;
             CloseButton.TextAlign = ContentAlignment.MiddleCenter;
-            CloseButton.Click += (s, e) => {
-                if (MessageBox.Show("确定要关闭吗？","关闭？", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                {
-                    Application.Exit();
-                }
+
+            CloseButton.MouseEnter += (s, e) =>
+            {
+                CloseButton.Width = Math.Min(this.DisplayRectangle.Width, 120);
+                CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
+                TitleLabel.Width = CloseButton.Left;
+                CloseButton.Text = "确定要关闭吗？";
             };
+            CloseButton.MouseLeave += (s, e) =>
+            {
+                CloseButton.Left = this.DisplayRectangle.Width - 28;
+                CloseButton.Width = 28;
+                TitleLabel.Width = CloseButton.Left;
+                CloseButton.Text = "X";
+            };
+            CloseButton.MouseDown += (s, e) => { CloseButton.ForeColor = Color.WhiteSmoke; CloseButton.BackColor = Color.DimGray; };
+            CloseButton.MouseUp += (s, e) => { CloseButton.ForeColor = Color.Black; CloseButton.BackColor = Color.Gray; };
+            CloseButton.Click += (s, e) => { Application.Exit(); };
         }
-        
+
         /// <summary>
         /// 自定义响应式布局
         /// </summary>

@@ -59,7 +59,7 @@ namespace LeonDirectUI.Painter
                     control.Padding
                     );
 
-            graphics.DrawRectangle(Pens.Red, control.Left, control.Top, control.Width-1, control.Height-1);
+            //graphics.DrawRectangle(Pens.Red, control.Left, control.Top, control.Width-1, control.Height-1);
         }
 
     }
