@@ -231,7 +231,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Rectangle lastRectangle = Rectangle;
-                Papa.X = Math.Max(value, 0);
+                Papa.X = value;
                 PaintRequired?.Invoke(this, lastRectangle);
             }
         }
@@ -245,7 +245,7 @@ namespace LeonDirectUI.DUIControl
             set
             {
                 Rectangle lastRectangle = Rectangle;
-                Papa.Y = Math.Max(value, 0);
+                Papa.Y = value;
                 PaintRequired?.Invoke(this, lastRectangle);
             }
         }

@@ -110,17 +110,37 @@ namespace LeonDirectUIDemo
 
             CloseButton.MouseEnter += (s, e) =>
             {
-                CloseButton.Width = Math.Min(this.DisplayRectangle.Width, 120);
-                CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
-                TitleLabel.Width = CloseButton.Left;
-                CloseButton.Text = "确定要关闭吗？";
+                ThreadPool.QueueUserWorkItem(new WaitCallback((x) =>
+                {
+                    CloseButton.Text = "确定要关闭吗？";
+                    while (CloseButton.Width < 120)
+                    {
+                        CloseButton.Width += 10;
+                        CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
+                        TitleLabel.Width = CloseButton.Left;
+                        Thread.Sleep(10);
+                    }
+                    CloseButton.Width = 120;
+                    CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
+                    TitleLabel.Width = CloseButton.Left;
+                }));
             };
             CloseButton.MouseLeave += (s, e) =>
             {
-                CloseButton.Left = this.DisplayRectangle.Width - 28;
-                CloseButton.Width = 28;
-                TitleLabel.Width = CloseButton.Left;
-                CloseButton.Text = "X";
+                ThreadPool.QueueUserWorkItem(new WaitCallback((x) =>
+                {
+                    CloseButton.Text = "X";
+                    while (CloseButton.Width > 28)
+                    {
+                        CloseButton.Width -= 10;
+                        CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
+                        TitleLabel.Width = CloseButton.Left;
+                        Thread.Sleep(10);
+                    }
+                    CloseButton.Width = 28;
+                    CloseButton.Left = this.DisplayRectangle.Width - CloseButton.Width;
+                    TitleLabel.Width = CloseButton.Left;
+                }));
             };
             CloseButton.MouseDown += (s, e) => { CloseButton.ForeColor = Color.WhiteSmoke; CloseButton.BackColor = Color.DimGray; };
             CloseButton.MouseUp += (s, e) => { CloseButton.ForeColor = Color.Black; CloseButton.BackColor = Color.Gray; };
