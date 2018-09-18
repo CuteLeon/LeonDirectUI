@@ -13,6 +13,7 @@ using LeonDirectUI.Painter;
 
 namespace LeonDirectUI.Container
 {
+    //TODO: 继续封装 Controls ，并在Add Remove方法增加处理逻辑
 
     /// <summary>
     /// 容器基类
@@ -20,14 +21,14 @@ namespace LeonDirectUI.Container
     public abstract class ContainerBase : Control, Interface.IContainer, IDisposable
     {
 
-        #region 基础字段
+        #region 基础属性
 
+        private readonly List<ControlBase> _controls = new List<ControlBase>();
         /// <summary>
         /// 控件列表
         /// </summary>
         [Browsable(false)]
-        public new List<ControlBase> Controls { get; } = new List<ControlBase>();
-
+        public new ControlBase[] Controls => _controls.ToArray();
         /// <summary>
         /// 绘制器
         /// </summary>
@@ -39,10 +40,6 @@ namespace LeonDirectUI.Container
         /// </summary>
         [Browsable(false)]
         public ControlBase ActiveControl { get; protected set; } = null;
-
-        #endregion
-
-        #region 基础属性
 
         #endregion
 
@@ -88,19 +85,112 @@ namespace LeonDirectUI.Container
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="control"></param>
+        public virtual void Add(ControlBase control)
+            => _controls.Add(control);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controls"></param>
+        public virtual void AddRange(IEnumerable<ControlBase> controls)
+            => _controls.AddRange(controls);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Clear()
+            => _controls.Clear();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public virtual bool Exists(Predicate<ControlBase> predicate)
+            => _controls.Exists(predicate);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public virtual ControlBase Find(Predicate<ControlBase> predicate)
+            => _controls.Find(predicate);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public virtual List<ControlBase> FindAll(Predicate<ControlBase> predicate)
+            => _controls.FindAll(predicate);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public virtual int FindIndex(Predicate<ControlBase> predicate)
+            => _controls.FindIndex(predicate);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public virtual ControlBase FindLast(Predicate<ControlBase> predicate)
+            => _controls.FindLast(predicate);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public virtual int FindLastIndex(Predicate<ControlBase> predicate)
+            => _controls.FindLastIndex(predicate);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public virtual void ForEach(Action<ControlBase> action)
+            => _controls.ForEach(action);
+
+        public virtual List<ControlBase> GetRange(int index,int count)
+        => _controls.GetRange(index,count);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="control"></param>
+        public virtual void RemoveControl(ControlBase control)
+        {
+            Controls.f        ;
+            _controls.IndexOf      ;
+            try
+            {
+                control.PaintRequired -= Control_PaintRequired;
+            }
+            catch { }
+            finally
+            {
+                _controls.Remove(control);
+            }
+
+        }
+
+        /// <summary>
         /// 释放资源
         /// </summary>
         public new void Dispose()
         {
             //取消订阅控件列表内的虚拟控件的请求订阅并移除虚拟控件
-            while (Controls.Count>0)
+            while (_controls.Count > 0)
             {
-                try
-                {
-                    Controls[0].PaintRequired -= Control_PaintRequired;
-                    Controls.RemoveAt(0);
-                }
-                catch { }
+                RemoveControl(_controls[0]);
             }
             base.Dispose();
         }
@@ -118,7 +208,7 @@ namespace LeonDirectUI.Container
         #endregion
 
         #region 布局和绘制
-        
+
         /// <summary>
         /// 页面布局 (初始化布局)
         /// </summary>
@@ -174,7 +264,7 @@ namespace LeonDirectUI.Container
             {
                 foreach (var control in Controls.Where(
                     ctl => ctl.Visible &&
-                    ctl!=sender && 
+                    ctl != sender &&
                     ctl.IntersectsWith(rectangle)))
 
                     Painter?.Paint(graphics, control);
@@ -210,13 +300,13 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnClick(EventArgs e)
         {
-            Point mousePoint= this.PointToClient(MousePosition);
+            Point mousePoint = this.PointToClient(MousePosition);
             ControlBase control = Controls.FirstOrDefault(
-                ctl => ctl.Visible && 
-                ctl.Enabled && 
-                ctl.Mouseable && 
+                ctl => ctl.Visible &&
+                ctl.Enabled &&
+                ctl.Mouseable &&
                 ctl.Contains(mousePoint));
-            
+
             if (control == null)
                 base.OnClick(e);
             else
@@ -231,9 +321,9 @@ namespace LeonDirectUI.Container
         {
             Point mousePoint = this.PointToClient(MousePosition);
             ControlBase control = Controls.FirstOrDefault(
-                ctl => ctl.Visible && 
-                ctl.Enabled && 
-                ctl.Mouseable && 
+                ctl => ctl.Visible &&
+                ctl.Enabled &&
+                ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
             if (control == null)
@@ -249,9 +339,9 @@ namespace LeonDirectUI.Container
         protected override void OnMouseMove(MouseEventArgs e)
         {
             ControlBase control = Controls.FirstOrDefault(
-                ctl => ctl.Visible && 
-                ctl.Enabled && 
-                ctl.Mouseable && 
+                ctl => ctl.Visible &&
+                ctl.Enabled &&
+                ctl.Mouseable &&
                 ctl.Contains(e.Location));
 
             //激活控件发生变化
@@ -292,8 +382,8 @@ namespace LeonDirectUI.Container
         {
             Point mousePoint = this.PointToClient(MousePosition);
             ControlBase control = Controls.FirstOrDefault(
-                ctl => ctl.Visible && 
-                ctl.Enabled && 
+                ctl => ctl.Visible &&
+                ctl.Enabled &&
                 ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
@@ -310,9 +400,9 @@ namespace LeonDirectUI.Container
         protected override void OnMouseDown(MouseEventArgs e)
         {
             ControlBase control = Controls.FirstOrDefault(
-                ctl => ctl.Visible && 
-                ctl.Enabled && 
-                ctl.Mouseable && 
+                ctl => ctl.Visible &&
+                ctl.Enabled &&
+                ctl.Mouseable &&
                 ctl.Contains(e.Location));
 
             if (control == null)
@@ -330,7 +420,7 @@ namespace LeonDirectUI.Container
             ControlBase control = Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
-                ctl.Mouseable && 
+                ctl.Mouseable &&
                 ctl.Contains(e.Location));
 
             if (control == null)
@@ -348,8 +438,8 @@ namespace LeonDirectUI.Container
             Point mousePoint = this.PointToClient(MousePosition);
             ControlBase control = Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
-                ctl.Enabled && 
-                ctl.Mouseable && 
+                ctl.Enabled &&
+                ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
             if (control == null)
