@@ -172,7 +172,11 @@ namespace LeonDirectUI.Container
             //绘制请求绘制的虚拟控件和与绘制区域有交集的可见虚拟控件
             using (Graphics graphics = this.CreateGraphics())
             {
-                foreach (var control in Controls.Where(ctl => ctl.Visible && ctl!=sender && ctl.IntersectsWith(rectangle)))
+                foreach (var control in Controls.Where(
+                    ctl => ctl.Visible &&
+                    ctl!=sender && 
+                    ctl.IntersectsWith(rectangle)))
+
                     Painter?.Paint(graphics, control);
                 //最后绘制发起请求的虚拟控件
                 Painter?.Paint(graphics, sender);
@@ -207,7 +211,11 @@ namespace LeonDirectUI.Container
         protected override void OnClick(EventArgs e)
         {
             Point mousePoint= this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible && 
+                ctl.Enabled && 
+                ctl.Mouseable && 
+                ctl.Contains(mousePoint));
             
             if (control == null)
                 base.OnClick(e);
@@ -222,7 +230,11 @@ namespace LeonDirectUI.Container
         protected override void OnDoubleClick(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible && 
+                ctl.Enabled && 
+                ctl.Mouseable && 
+                ctl.Contains(mousePoint));
 
             if (control == null)
                 base.OnDoubleClick(e);
@@ -236,7 +248,11 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(e.Location));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible && 
+                ctl.Enabled && 
+                ctl.Mouseable && 
+                ctl.Contains(e.Location));
 
             //激活控件发生变化
             if (ActiveControl != control)
@@ -275,7 +291,11 @@ namespace LeonDirectUI.Container
         protected override void OnMouseHover(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible && 
+                ctl.Enabled && 
+                ctl.Mouseable &&
+                ctl.Contains(mousePoint));
 
             if (control == null)
                 base.OnMouseHover(e);
@@ -289,7 +309,11 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(e.Location));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible && 
+                ctl.Enabled && 
+                ctl.Mouseable && 
+                ctl.Contains(e.Location));
 
             if (control == null)
                 base.OnMouseDown(e);
@@ -303,7 +327,11 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(e.Location));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible &&
+                ctl.Enabled &&
+                ctl.Mouseable && 
+                ctl.Contains(e.Location));
 
             if (control == null)
                 base.OnMouseUp(e);
@@ -318,7 +346,11 @@ namespace LeonDirectUI.Container
         protected override void OnMouseEnter(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(ctl => ctl.Visible && ctl.Enabled && ctl.Contains(mousePoint));
+            ControlBase control = Controls.FirstOrDefault(
+                ctl => ctl.Visible &&
+                ctl.Enabled && 
+                ctl.Mouseable && 
+                ctl.Contains(mousePoint));
 
             if (control == null)
             {

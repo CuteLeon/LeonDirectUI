@@ -79,7 +79,7 @@ namespace LeonDirectUI.DUIControl
             }
         }
 
-        private Size _minSize=Size.Empty;
+        private Size _minSize = Size.Empty;
         /// <summary>
         /// 最小尺寸
         /// </summary>
@@ -93,7 +93,7 @@ namespace LeonDirectUI.DUIControl
                 if (value.Height < 0) value.Height = 0;
                 if (value.Width > 0 && value.Width > _maxSize.Width) _maxSize.Width = value.Width;
                 if (value.Height > 0 && value.Height > _maxSize.Height) _maxSize.Height = value.Height;
-                
+
                 _minSize = value;
 
                 if ((_minSize.Width != 0 && _minSize.Height != 0) &&
@@ -522,13 +522,38 @@ namespace LeonDirectUI.DUIControl
         public MouseStates MouseState
         {
             get => mouseState;
-            set
+            protected set
             {
                 if (mouseState != value)
                 {
                     mouseState = value;
                     MouseStateChanged?.Invoke(this, value);
                     //PaintRequired?.Invoke(this, Rectangle);
+                }
+            }
+        }
+
+        private bool _mouseable = false;
+        /// <summary>
+        /// 是否响应鼠标事件
+        /// </summary>
+        //TODO: [提醒] 虚拟控件需要开启此属性才可响应鼠标事件
+        public virtual bool Mouseable
+        {
+            get => _mouseable;
+            set
+            {
+                if (_mouseable != value)
+                {
+                    _mouseable = value;
+                    //禁用鼠标支持时若鼠标状态不是正常状态则恢复鼠标状态并请求重绘
+                    if (!value && MouseState != MouseStates.Normal)
+                    {
+                        MouseState = MouseStates.Normal;
+                        PaintRequired?.Invoke(this, Rectangle);
+                    }
+                    //触发鼠标支持状态改变事件
+                    MouseableChanged?.Invoke(this, value);
                 }
             }
         }
@@ -547,6 +572,11 @@ namespace LeonDirectUI.DUIControl
         /// 请求绘制事件
         /// </summary>
         public event PaintRequiredHandler PaintRequired;
+
+        /// <summary>
+        /// 鼠标支持状态变化
+        /// </summary>
+        public event EventHandler<bool> MouseableChanged;
 
         /// <summary>
         /// 鼠标进入事件
@@ -616,7 +646,7 @@ namespace LeonDirectUI.DUIControl
         public void OnClick(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 点击");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 //MouseState = MouseStates.Press;
                 Click?.Invoke(this, e);
@@ -631,7 +661,7 @@ namespace LeonDirectUI.DUIControl
         public void OnDoubleClick(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 双击");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 //MouseState = MouseStates.Press;
                 DoubleClick?.Invoke(this, e);
@@ -646,7 +676,7 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseEnter(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标进入");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 MouseState = MouseStates.Hover;
                 MouseEnter?.Invoke(this, e);
@@ -660,7 +690,7 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseMove(MouseEventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标移动");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 MouseState = MouseStates.Hover;
                 MouseMove?.Invoke(this, e);
@@ -674,7 +704,7 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseHover(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标悬停");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 MouseState = MouseStates.Hover;
                 MouseHover?.Invoke(this, e);
@@ -688,7 +718,7 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseDown(MouseEventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标按压");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 MouseState = MouseStates.Press;
                 MouseDown?.Invoke(this, e);
@@ -702,7 +732,7 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseUp(MouseEventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标抬起");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 MouseState = MouseStates.Hover;
                 MouseUp?.Invoke(this, e);
@@ -716,7 +746,7 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseLeave(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标离开");
-            if (Visible && Enabled)
+            if (Visible && Enabled && Mouseable)
             {
                 MouseState = MouseStates.Normal;
                 MouseLeave?.Invoke(this, e);

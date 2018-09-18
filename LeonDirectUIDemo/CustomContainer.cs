@@ -81,6 +81,7 @@ namespace LeonDirectUIDemo
             TitleLabel.ForeColor = Color.Orange;
             TitleLabel.BackColor = Color.Gray;
             TitleLabel.ShowEllipsis = true;
+            TitleLabel.Mouseable = true;
             TitleLabel.Font = new Font(TitleLabel.Font, FontStyle.Bold);
             TitleLabel.Click += (s, e) => { Console.WriteLine("点击标题区域"); };
             TitleLabel.DoubleClick += (s, e) => { Console.WriteLine("双击标题区域"); };
@@ -105,6 +106,7 @@ namespace LeonDirectUIDemo
 
             CloseButton.Name = "关闭按钮";
             CloseButton.Text = "X";
+            CloseButton.Mouseable = true;
             CloseButton.BackColor = Color.DarkGray;
             CloseButton.TextAlign = ContentAlignment.MiddleCenter;
 

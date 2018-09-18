@@ -18,7 +18,7 @@ namespace LeonDirectUI.Interface
         /// <summary>
         /// 鼠标状态
         /// </summary>
-        MouseStates MouseState { get; set; }
+        MouseStates MouseState { get; }
 
         /// <summary>
         /// 点击
