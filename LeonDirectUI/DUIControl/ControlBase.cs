@@ -21,7 +21,7 @@ namespace LeonDirectUI.DUIControl
     {
 
         #region 基本属性
-        //TODO: [提醒] [需要测试] 可见性和可用性影响显示效果和交互效果
+        //TODO: [提醒] [虚拟控件扩展] 可见性和可用性影响显示效果和交互效果
 
         /// <summary>
         /// 控件的名称
@@ -105,7 +105,7 @@ namespace LeonDirectUI.DUIControl
         #endregion
 
         #region 显示属性
-        //TODO: [提醒] 每次显示属性发生变动需要调用绘制方法
+        //TODO: [提醒] [虚拟控件扩展] 每次显示属性发生变动需要调用绘制方法
 
         private string _text = "虚拟控件";
         /// <summary>
@@ -537,7 +537,7 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 是否响应鼠标事件
         /// </summary>
-        //TODO: [提醒] 虚拟控件需要开启此属性才可响应鼠标事件
+        //TODO: [提醒] [虚拟控件使用] 虚拟控件需要开启此属性才可响应鼠标事件
         public virtual bool Mouseable
         {
             get => _mouseable;
@@ -633,7 +633,9 @@ namespace LeonDirectUI.DUIControl
 
         #region 容器访问方法
 
-        //触发绘制请求
+        /// <summary>
+        /// 触发绘制请求
+        /// </summary>
         public void OnPaintRequired()
         {
             PaintRequired?.Invoke(this, Rectangle);

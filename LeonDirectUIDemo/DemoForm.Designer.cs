@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DemoForm));
             this.button1 = new System.Windows.Forms.Button();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.customContainer1 = new LeonDirectUIDemo.CustomContainer();
+            this.MainContainer = new LeonDirectUIDemo.CustomContainer();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
@@ -62,22 +63,25 @@
             // 
             // MainSplitContainer.Panel2
             // 
-            this.MainSplitContainer.Panel2.Controls.Add(this.customContainer1);
+            this.MainSplitContainer.Panel2.Controls.Add(this.MainContainer);
             this.MainSplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(5);
             this.MainSplitContainer.Size = new System.Drawing.Size(800, 173);
             this.MainSplitContainer.SplitterDistance = 160;
             this.MainSplitContainer.TabIndex = 2;
             // 
-            // customContainer1
+            // MainContainer
             // 
-            this.customContainer1.Description = "我是一个自适应的描述标签";
-            this.customContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.customContainer1.Location = new System.Drawing.Point(5, 5);
-            this.customContainer1.Name = "customContainer1";
-            this.customContainer1.PreviewImage = global::LeonDirectUIDemo.UIResource.white_emoticons_04;
-            this.customContainer1.Size = new System.Drawing.Size(626, 163);
-            this.customContainer1.TabIndex = 0;
-            this.customContainer1.Title = "我是标题标签哦~";
+            this.MainContainer.Description = "我是一个自适应的描述标签";
+            this.MainContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainContainer.Location = new System.Drawing.Point(5, 5);
+            this.MainContainer.Name = "MainContainer";
+            this.MainContainer.PreviewImage = ((System.Drawing.Image)(resources.GetObject("MainContainer.PreviewImage")));
+            this.MainContainer.Size = new System.Drawing.Size(626, 163);
+            this.MainContainer.TabIndex = 0;
+            this.MainContainer.Text = "customContainer1";
+            this.MainContainer.Title = "我是标题标签哦~";
+            this.MainContainer.ControlAdded += new System.EventHandler<LeonDirectUI.DUIControl.ControlBase>(this.MainContainer_ControlAdded);
+            this.MainContainer.ControlRemoved += new System.EventHandler<LeonDirectUI.DUIControl.ControlBase>(this.MainContainer_ControlRemoved);
             // 
             // DemoForm
             // 
@@ -98,7 +102,7 @@
         #endregion
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.SplitContainer MainSplitContainer;
-        private CustomContainer customContainer1;
+        private CustomContainer MainContainer;
     }
 }
 

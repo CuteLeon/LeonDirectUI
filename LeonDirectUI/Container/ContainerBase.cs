@@ -13,13 +13,26 @@ using LeonDirectUI.Painter;
 
 namespace LeonDirectUI.Container
 {
-    //TODO: 继续封装 Controls ，并在Add Remove方法增加处理逻辑
 
     /// <summary>
     /// 容器基类
     /// </summary>
     public abstract class ContainerBase : Control, Interface.IContainer, IDisposable
     {
+
+        #region 事件
+
+        /// <summary>
+        /// 有控件加入
+        /// </summary>
+        public new event EventHandler<ControlBase> ControlAdded;
+
+        /// <summary>
+        /// 有控件移除
+        /// </summary>
+        public new event EventHandler<ControlBase> ControlRemoved;
+
+        #endregion
 
         #region 基础属性
 
@@ -58,12 +71,6 @@ namespace LeonDirectUI.Container
 
             //初始化布局
             InitializeLayout();
-
-            //监听子虚拟控件绘制请求
-            foreach (var control in Controls)
-            {
-                control.PaintRequired += Control_PaintRequired;
-            }
         }
 
         /// <summary>
@@ -85,115 +92,255 @@ namespace LeonDirectUI.Container
         }
 
         /// <summary>
-        /// 
+        /// 释放资源
         /// </summary>
-        /// <param name="control"></param>
-        public virtual void Add(ControlBase control)
-            => _controls.Add(control);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="controls"></param>
-        public virtual void AddRange(IEnumerable<ControlBase> controls)
-            => _controls.AddRange(controls);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void Clear()
-            => _controls.Clear();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual bool Exists(Predicate<ControlBase> predicate)
-            => _controls.Exists(predicate);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual ControlBase Find(Predicate<ControlBase> predicate)
-            => _controls.Find(predicate);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual List<ControlBase> FindAll(Predicate<ControlBase> predicate)
-            => _controls.FindAll(predicate);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual int FindIndex(Predicate<ControlBase> predicate)
-            => _controls.FindIndex(predicate);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual ControlBase FindLast(Predicate<ControlBase> predicate)
-            => _controls.FindLast(predicate);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual int FindLastIndex(Predicate<ControlBase> predicate)
-            => _controls.FindLastIndex(predicate);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="action"></param>
-        public virtual void ForEach(Action<ControlBase> action)
-            => _controls.ForEach(action);
-
-        public virtual List<ControlBase> GetRange(int index,int count)
-        => _controls.GetRange(index,count);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="control"></param>
-        public virtual void RemoveControl(ControlBase control)
+        public new void Dispose()
         {
-            Controls.f        ;
-            _controls.IndexOf      ;
+            //清空控件列表
+            Clear();
+            base.Dispose();
+        }
+
+        /// <summary>
+        /// 注册控件
+        /// </summary>
+        /// <param name="control"></param>
+        protected virtual void RegisterControl(ControlBase control)
+        {
+            //TODO: [提醒] [容器扩展] 新增控件时需要的初始化操作放这里
+            try
+            {
+                control.PaintRequired += Control_PaintRequired;
+            }
+            catch { }
+            finally { }
+        }
+
+        /// <summary>
+        /// 注销控件
+        /// </summary>
+        /// <param name="control"></param>
+        protected virtual void UnregisterControl(ControlBase control)
+        {
+            //TODO: [提醒] [容器扩展] 移除控件时需要的初始化操作放这里
             try
             {
                 control.PaintRequired -= Control_PaintRequired;
             }
             catch { }
-            finally
-            {
-                _controls.Remove(control);
-            }
+            finally { }
+        }
 
+        #endregion
+
+        #region Controls公开方法
+
+        #region 增加
+
+        /// <summary>
+        /// 添加控件
+        /// </summary>
+        /// <param name="control">虚拟控件</param>
+        public virtual void Add(ControlBase control)
+        {
+            RegisterControl(control);
+
+            _controls.Add(control);
+
+            OnControlAdded(control);
         }
 
         /// <summary>
-        /// 释放资源
+        /// 添加控件数组
         /// </summary>
-        public new void Dispose()
+        /// <param name="controls">虚拟控件</param>
+        public virtual void AddRange(IEnumerable<ControlBase> controls)
         {
-            //取消订阅控件列表内的虚拟控件的请求订阅并移除虚拟控件
-            while (_controls.Count > 0)
-            {
-                RemoveControl(_controls[0]);
-            }
-            base.Dispose();
+            foreach (var control in controls)
+                Add(control);
+
+            //_controls.AddRange(controls);
         }
+
+        /// <summary>
+        /// 插入虚拟控件
+        /// </summary>
+        /// <param name="index">插入位置</param>
+        /// <param name="control">虚拟控件</param>
+        public virtual void Insert(int index, ControlBase control)
+        {
+            RegisterControl(control);
+
+            _controls.Insert(index, control);
+
+            OnControlAdded(control);
+        }
+
+        /// <summary>
+        /// 插入虚拟控件数组
+        /// </summary>
+        /// <param name="index">插入位置</param>
+        /// <param name="controls">虚拟控件数组</param>
+        public virtual void InsertRange(int index, IEnumerable<ControlBase> controls)
+        {
+            _controls.ForEach(
+                (control) =>
+                {
+                    Insert(index, control);
+                    index++;
+                });
+        }
+
+        #endregion
+
+        #region 移除
+
+        /// <summary>
+        /// 移除虚拟控件
+        /// </summary>
+        /// <param name="control">虚拟控件</param>
+        /// <returns></returns>
+        public virtual bool Remove(ControlBase control)
+        {
+            UnregisterControl(control);
+
+            var result = _controls.Remove(control);
+
+            OnControlRemoved(control);
+            return result;
+        }
+
+        /// <summary>
+        /// 移除对应标识的虚拟控件
+        /// </summary>
+        /// <param name="index">标识</param>
+        public virtual void RemoveAt(int index)
+        {
+            Remove(_controls[index]);
+        }
+
+        /// <summary>
+        /// 移除指定区间的虚拟控件
+        /// </summary>
+        /// <param name="index">开始位置</param>
+        /// <param name="count">移除长度</param>
+        public virtual void RemoveRange(int index, int count)
+        {
+            foreach(var control in _controls.Skip(index).Take(count))
+                Remove(control);
+        }
+
+        /// <summary>
+        /// 移除所有符合条件谓词的虚拟控件
+        /// </summary>
+        /// <param name="predicate">条件谓词</param>
+        /// <returns></returns>
+        public virtual int RemoveAll(Predicate<ControlBase> predicate)
+        {
+            List<ControlBase> controls = _controls.FindAll(predicate);
+
+            foreach (var control in controls)
+            {
+                Remove(control);
+            }
+
+            return controls.Count;
+        }
+
+        /// <summary>
+        /// 清空列表
+        /// </summary>
+        public virtual void Clear()
+        {
+            while (_controls.Count != 0)
+                RemoveAt(_controls.Count - 1);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 是否存在符合条件谓词的元素
+        /// </summary>
+        /// <param name="predicate">条件谓词</param>
+        /// <returns></returns>
+        public virtual bool Exists(Predicate<ControlBase> predicate)
+            => _controls.Exists(predicate);
+
+        /// <summary>
+        /// 获取符合条件谓词的元素标识
+        /// </summary>
+        /// <param name="predicate">条件谓词</param>
+        /// <returns></returns>
+        public virtual int FindIndex(Predicate<ControlBase> predicate)
+            => _controls.FindIndex(predicate);
+
+        /// <summary>
+        /// 查找符合条件谓词的最一个元素
+        /// </summary>
+        /// <param name="predicate">条件谓词</param>
+        /// <returns></returns>
+        public virtual ControlBase FindLast(Predicate<ControlBase> predicate)
+            => _controls.FindLast(predicate);
+
+        /// <summary>
+        /// 查找符合条件谓词的最一个元素的标识
+        /// </summary>
+        /// <param name="predicate">条件谓词</param>
+        /// <returns></returns>
+        public virtual int FindLastIndex(Predicate<ControlBase> predicate)
+            => _controls.FindLastIndex(predicate);
+
+        /// <summary>
+        /// 对每个元素执行动作
+        /// </summary>
+        /// <param name="action"></param>
+        public virtual void ForEach(Action<ControlBase> action)
+            => _controls.ForEach(action);
+
+        /// <summary>
+        /// 获取元素的标识
+        /// </summary>
+        /// <param name="control">虚拟控件</param>
+        /// <returns></returns>
+        public virtual int IndexOf(ControlBase control)
+            => _controls.IndexOf(control);
+
+        /// <summary>
+        /// 倒序查找虚拟控件的标识
+        /// </summary>
+        /// <param name="control">虚拟控件</param>
+        /// <returns></returns>
+        public virtual int LastIndexOf(ControlBase control)
+            => _controls.LastIndexOf(control);
+
+        /// <summary>
+        /// 使用默认比较器排序
+        /// </summary>
+        public virtual void Sort()
+            => _controls.Sort();
+
+        /// <summary>
+        /// 使用指定比较器排序
+        /// </summary>
+        /// <param name="comparison">比较器</param>
+        public virtual void Sort(Comparison<ControlBase> comparison)
+            => _controls.Sort(comparison);
+
+        /// <summary>
+        /// 使用指定比较器排序
+        /// </summary>
+        /// <param name="comparer">比较器</param>
+        public virtual void Sort(IComparer<ControlBase> comparer)
+            => _controls.Sort(comparer);
+
+        /// <summary>
+        /// 使用指定比较器
+        /// </summary>
+        /// <param name="index">排序开始标识</param>
+        /// <param name="count">排序区域长度</param>
+        /// <param name="comparer">比较器</param>
+        public virtual void Sort(int index, int count, IComparer<ControlBase> comparer)
+            => _controls.Sort(index, count, comparer);
 
         #endregion
 
@@ -201,7 +348,7 @@ namespace LeonDirectUI.Container
 
         protected override void WndProc(ref Message m)
         {
-            //TODO: [提醒] 处理消息放在这里
+            //TODO: [提醒] [容器基类开发] 处理消息放在这里
             base.WndProc(ref m);
         }
 
@@ -252,7 +399,6 @@ namespace LeonDirectUI.Container
         /// </summary>
         /// <param name="sender">请求绘制的子虚拟控件</param>
         /// <param name="rectangle">涉及的区域</param>
-        //TODO: [提醒] 虚拟控件动态注册到控件容器后需要订阅 PaintRequired 事件到此方法以接收绘制请求；
         public void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
             if (sender == null) throw new Exception("空的虚拟控件请求了绘制");
@@ -293,6 +439,38 @@ namespace LeonDirectUI.Container
         #endregion
 
         #region 触发事件
+
+        /// <summary>
+        /// 弃用基类 OnControlAdded(ControlEventArgs) 方法
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnControlAdded(ControlEventArgs e)
+            => throw new Exception("亲爱的子类，我是你的爸爸——ContainerBase，请不要继续使用此方法，移步 OnControlAdded(ControlBase control)");
+
+        /// <summary>
+        /// 弃用基类 OnControlRemoved(ControlEventArgs) 方法
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnControlRemoved(ControlEventArgs e)
+            => throw new Exception("亲爱的子类，我是你的爸爸——ContainerBase，请不要继续使用此方法，移步 OnControlAdded(ControlBase control)");
+
+        /// <summary>
+        /// 触发添加虚拟控件事件
+        /// </summary>
+        /// <param name="control">添加的虚拟控件</param>
+        protected virtual void OnControlAdded(ControlBase control)
+        {
+            ControlAdded?.Invoke(this, control);
+        }
+
+        /// <summary>
+        /// 触发移除虚拟控件事件
+        /// </summary>
+        /// <param name="control">移除的虚拟空间</param>
+        protected virtual void OnControlRemoved(ControlBase control)
+        {
+            ControlRemoved?.Invoke(this, control);
+        }
 
         /// <summary>
         /// 点击

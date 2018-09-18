@@ -71,10 +71,10 @@ namespace LeonDirectUIDemo
         public override void InitializeLayout()
         {
             //创建虚拟控件对象 并 维护子虚拟控件列表
-            Controls.Add(TitleLabel = new ControlBase());
-            Controls.Add(PreviewImageBox = new ControlBase());
-            Controls.Add(DescriptionLabel = new ControlBase());
-            Controls.Add(CloseButton = new ControlBase());
+            Add(TitleLabel = new ControlBase());
+            Add(PreviewImageBox = new ControlBase());
+            Add(DescriptionLabel = new ControlBase());
+            Add(CloseButton = new ControlBase());
 
             TitleLabel.Name = "标题标签";
             TitleLabel.Text = "我是标题标签哦~";
@@ -89,7 +89,7 @@ namespace LeonDirectUIDemo
             TitleLabel.MouseLeave += (s, e) => { TitleLabel.ForeColor = Color.Orange; };
             TitleLabel.MouseDown += (s, e) => { TitleLabel.ForeColor = Color.Chocolate; };
             TitleLabel.MouseUp += (s, e) => { TitleLabel.ForeColor = Color.OrangeRed; };
-
+            
             PreviewImageBox.Name = "预览图像框";
             PreviewImageBox.Text = string.Empty;
             PreviewImageBox.BackColor = Color.Silver;
