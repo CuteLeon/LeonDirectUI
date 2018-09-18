@@ -56,7 +56,7 @@ namespace LeonDirectUI.Container
             base.DoubleBuffered = true;
             base.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             base.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            base.SetStyle(ControlStyles.ResizeRedraw, true);
+            base.SetStyle(ControlStyles.ResizeRedraw, false);
             base.SetStyle(ControlStyles.UserPaint, true);
 
             //初始化布局

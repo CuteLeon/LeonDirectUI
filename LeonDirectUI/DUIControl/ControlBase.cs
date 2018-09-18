@@ -527,7 +527,8 @@ namespace LeonDirectUI.DUIControl
                 if (mouseState != value)
                 {
                     mouseState = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    MouseStateChanged(this, value);
+                    //PaintRequired?.Invoke(this, Rectangle);
                 }
             }
         }
@@ -592,6 +593,11 @@ namespace LeonDirectUI.DUIControl
         /// 双击事件
         /// </summary>
         public event EventHandler DoubleClick;
+
+        /// <summary>
+        /// 鼠标状态改变
+        /// </summary>
+        public event EventHandler<MouseStates> MouseStateChanged;
 
         #endregion
 

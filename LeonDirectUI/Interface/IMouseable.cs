@@ -76,7 +76,13 @@ namespace LeonDirectUI.Interface
         /// </summary>
         /// <param name="e"></param>
         event EventHandler Click;
+        
 
+        /// <summary>
+        /// 鼠标状态改变
+        /// </summary>
+        event EventHandler<MouseStates> MouseStateChanged;
+        
         /// <summary>
         /// 双击事件
         /// </summary>
