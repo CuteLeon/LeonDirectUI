@@ -113,7 +113,7 @@ namespace LeonDirectUI.DUIControl
         #region 显示属性
         //TODO: [提醒] [虚拟控件扩展] 每次显示属性发生变动需要调用绘制方法
 
-        private string _text = "虚拟控件";
+        private string _text = "";
         /// <summary>
         /// 显示文本
         /// </summary>

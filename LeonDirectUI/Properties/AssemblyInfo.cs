@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("LeonDirectUI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("https://github.com/CuteLeon/LeonDirectUI")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("https://github.com/CuteLeon/LeonDirectUI")]
 [assembly: AssemblyProduct("LeonDirectUI")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
