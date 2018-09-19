@@ -108,6 +108,7 @@ namespace LeonDirectUI.Container
         protected virtual void RegisterControl(ControlBase control)
         {
             //TODO: [提醒] [容器扩展] 新增控件时需要的初始化操作放这里
+            //TODO: [提醒] [容器扩展] 这里的操作需要兼容克隆容器
             try
             {
                 control.PaintRequired += Control_PaintRequired;
@@ -123,6 +124,7 @@ namespace LeonDirectUI.Container
         protected virtual void UnregisterControl(ControlBase control)
         {
             //TODO: [提醒] [容器扩展] 移除控件时需要的初始化操作放这里
+            //TODO: [提醒] [容器扩展] 这里的操作需要兼容克隆容器
             try
             {
                 control.PaintRequired -= Control_PaintRequired;
@@ -401,6 +403,11 @@ namespace LeonDirectUI.Container
         /// <param name="rectangle">涉及的区域</param>
         public void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
+            if (this.Disposing || this.IsDisposed)
+            {
+                Console.WriteLine("使用释放的对象绘制UI；");
+                return;
+            }
             if (sender == null) throw new Exception("空的虚拟控件请求了绘制");
             if ((sender.Width <= 0 || rectangle.Height <= 0) &&
                 (sender.Width <= 0 || sender.Height <= 0)) return;

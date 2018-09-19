@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloneContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomContainer.cs" />
     <Compile Include="DemoForm.cs">
       <SubType>Form</SubType>
