@@ -109,8 +109,11 @@ namespace LeonDirectUI.Container
         {
             //TODO: [提醒] [容器扩展] 新增控件时需要的初始化操作放这里
             //TODO: [提醒] [容器扩展] 这里的操作需要兼容克隆容器
+            if (control == null) throw new Exception("注册的虚拟控件为空");
+
             try
             {
+                control.Disposing += Control_Dispoing;
                 control.PaintRequired += Control_PaintRequired;
             }
             catch { }
@@ -121,12 +124,15 @@ namespace LeonDirectUI.Container
         /// 注销控件
         /// </summary>
         /// <param name="control"></param>
-        protected virtual void UnregisterControl(ControlBase control)
+        protected virtual void DisregisterControl(ControlBase control)
         {
             //TODO: [提醒] [容器扩展] 移除控件时需要的初始化操作放这里
             //TODO: [提醒] [容器扩展] 这里的操作需要兼容克隆容器
+            if (control == null) return;
+
             try
             {
+                control.Disposing -= Control_Dispoing;
                 control.PaintRequired -= Control_PaintRequired;
             }
             catch { }
@@ -204,7 +210,7 @@ namespace LeonDirectUI.Container
         /// <returns></returns>
         public virtual bool Remove(ControlBase control)
         {
-            UnregisterControl(control);
+            DisregisterControl(control);
 
             var result = _controls.Remove(control);
 
@@ -228,7 +234,7 @@ namespace LeonDirectUI.Container
         /// <param name="count">移除长度</param>
         public virtual void RemoveRange(int index, int count)
         {
-            foreach(var control in _controls.Skip(index).Take(count))
+            foreach (var control in _controls.Skip(index).Take(count))
                 Remove(control);
         }
 
@@ -393,7 +399,28 @@ namespace LeonDirectUI.Container
         /// </summary>
         public void PaintAll()
         {
+            if (this.Disposing || this.IsDisposed) return;
+
             PaintAll(this.CreateGraphics());
+        }
+
+        /// <summary>
+        /// 绘制与区域相交的虚拟控件
+        /// </summary>
+        public void PaintRectangle(Rectangle rectangle)
+        {
+            if (this.Disposing || this.IsDisposed) return;
+
+            if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
+
+            using (Graphics graphics = this.CreateGraphics())
+            {
+                foreach (var control in Controls.Where(
+                    ctl => ctl.Visible &&
+                    ctl.IntersectsWith(rectangle)))
+
+                    Painter?.Paint(graphics, control);
+            }
         }
 
         /// <summary>
@@ -401,7 +428,7 @@ namespace LeonDirectUI.Container
         /// </summary>
         /// <param name="sender">请求绘制的子虚拟控件</param>
         /// <param name="rectangle">涉及的区域</param>
-        public void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
+        protected void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
             if (this.Disposing || this.IsDisposed)
             {
@@ -409,7 +436,7 @@ namespace LeonDirectUI.Container
                 return;
             }
             if (sender == null) throw new Exception("空的虚拟控件请求了绘制");
-            if ((sender.Width <= 0 || rectangle.Height <= 0) &&
+            if ((rectangle.Width <= 0 || rectangle.Height <= 0) &&
                 (sender.Width <= 0 || sender.Height <= 0)) return;
 
             //绘制请求绘制的虚拟控件和与绘制区域有交集的可见虚拟控件
@@ -424,6 +451,16 @@ namespace LeonDirectUI.Container
                 //最后绘制发起请求的虚拟控件
                 Painter?.Paint(graphics, sender);
             }
+        }
+
+        /// <summary>
+        /// 虚拟控件正在释放事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Control_Dispoing(object sender, EventArgs e)
+        {
+            Remove(sender as ControlBase);
         }
 
         /// <summary>

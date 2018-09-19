@@ -32,6 +32,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.MainContainer = new LeonDirectUIDemo.CustomContainer();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
@@ -58,6 +59,7 @@
             // MainSplitContainer.Panel1
             // 
             this.MainSplitContainer.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.MainSplitContainer.Panel1.Controls.Add(this.button2);
             this.MainSplitContainer.Panel1.Controls.Add(this.button1);
             this.MainSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(5);
             // 
@@ -83,6 +85,17 @@
             this.MainContainer.ControlAdded += new System.EventHandler<LeonDirectUI.DUIControl.ControlBase>(this.MainContainer_ControlAdded);
             this.MainContainer.ControlRemoved += new System.EventHandler<LeonDirectUI.DUIControl.ControlBase>(this.MainContainer_ControlRemoved);
             // 
+            // button2
+            // 
+            this.button2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button2.Location = new System.Drawing.Point(5, 45);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(150, 40);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "测试按钮";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -103,6 +116,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.SplitContainer MainSplitContainer;
         private CustomContainer MainContainer;
+        private System.Windows.Forms.Button button2;
     }
 }
 

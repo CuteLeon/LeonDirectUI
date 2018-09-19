@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Container\CloneContainerBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Container\ContainerBase.cs">
       <SubType>Component</SubType>
     </Compile>

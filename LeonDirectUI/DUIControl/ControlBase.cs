@@ -17,7 +17,7 @@ namespace LeonDirectUI.DUIControl
     /// <summary>
     /// 控件基类
     /// </summary>
-    public class ControlBase : IMouseable
+    public class ControlBase : IMouseable, IDisposable
     {
 
         #region 基本属性
@@ -563,6 +563,11 @@ namespace LeonDirectUI.DUIControl
         #region 容器订阅事件
 
         /// <summary>
+        /// 虚拟控件正在被释放
+        /// </summary>
+        public event EventHandler Disposing;
+
+        /// <summary>
         /// 绘制请求事件委托
         /// </summary>
         /// <param name="rectangle">绘制区域</param>
@@ -753,6 +758,39 @@ namespace LeonDirectUI.DUIControl
                 MouseState = MouseStates.Normal;
                 MouseLeave?.Invoke(this, e);
             }
+        }
+
+        #endregion
+
+        #region IDisposable Support
+
+        private bool disposedValue = false; // 要检测冗余调用
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Disposing?.Invoke(this, EventArgs.Empty);
+
+                    this._font = null;
+                    this._backgroundImage = null;
+                    this._image = null;
+                }
+
+                // 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
+
+                disposedValue = true;
+            }
+        }
+
+        // 添加此代码以正确实现可处置模式。
+        public void Dispose()
+        {
+            Dispose(true);
+
+            GC.SuppressFinalize(this);
         }
 
         #endregion
