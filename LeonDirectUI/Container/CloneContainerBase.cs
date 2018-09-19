@@ -113,6 +113,8 @@ namespace LeonDirectUI.Container
         {
             //仅解除克隆绑定
             DiscloneContainer((sender as ContainerBase));
+
+            this.Invalidate();
         }
 
         #endregion
