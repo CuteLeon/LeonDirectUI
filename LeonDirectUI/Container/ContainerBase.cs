@@ -560,10 +560,10 @@ namespace LeonDirectUI.Container
                 ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
-            if (control == null)
-                base.OnClick(e);
-            else
+            if (control != null)
                 control.OnClick(e);
+
+            base.OnClick(e);
         }
 
         /// <summary>
@@ -579,10 +579,10 @@ namespace LeonDirectUI.Container
                 ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
-            if (control == null)
-                base.OnDoubleClick(e);
-            else
+            if (control != null)
                 control.OnDoubleClick(e);
+
+            base.OnDoubleClick(e);
         }
 
         /// <summary>
@@ -617,13 +617,9 @@ namespace LeonDirectUI.Container
             else
             {
                 if (ActiveControl != null)
-                {
                     ActiveControl.OnMouseMove(e);
-                }
-                else
-                {
-                    base.OnMouseMove(e);
-                }
+                
+                base.OnMouseMove(e);
             }
         }
 
@@ -640,10 +636,10 @@ namespace LeonDirectUI.Container
                 ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
-            if (control == null)
-                base.OnMouseHover(e);
-            else
+            if (control != null)
                 control.OnMouseHover(e);
+
+            base.OnMouseHover(e);
         }
 
         /// <summary>
@@ -658,10 +654,10 @@ namespace LeonDirectUI.Container
                 ctl.Mouseable &&
                 ctl.Contains(e.Location));
 
-            if (control == null)
-                base.OnMouseDown(e);
-            else
+            if (control != null)
                 control.OnMouseDown(e);
+
+            base.OnMouseDown(e);
         }
 
         /// <summary>
@@ -676,10 +672,10 @@ namespace LeonDirectUI.Container
                 ctl.Mouseable &&
                 ctl.Contains(e.Location));
 
-            if (control == null)
-                base.OnMouseUp(e);
-            else
+            if (control != null)
                 control.OnMouseUp(e);
+            
+            base.OnMouseUp(e);
         }
 
         /// <summary>
@@ -695,15 +691,13 @@ namespace LeonDirectUI.Container
                 ctl.Mouseable &&
                 ctl.Contains(mousePoint));
 
-            if (control == null)
-            {
-                base.OnMouseEnter(e);
-            }
-            else
+            if (control != null)
             {
                 ActiveControl = control;
                 ActiveControl.OnMouseEnter(e);
             }
+            
+            base.OnMouseEnter(e);
         }
 
         /// <summary>
@@ -717,10 +711,8 @@ namespace LeonDirectUI.Container
                 ActiveControl.OnMouseLeave(e);
                 ActiveControl = null;
             }
-            else
-            {
-                base.OnMouseLeave(e);
-            }
+            
+            base.OnMouseLeave(e);
         }
 
         #endregion
