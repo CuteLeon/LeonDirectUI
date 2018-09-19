@@ -93,6 +93,7 @@ namespace LeonDirectUI.Container
         {
             base.DoubleBuffered = true;
             base.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            base.SetStyle(ControlStyles.ContainerControl, true);
             base.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             base.SetStyle(ControlStyles.ResizeRedraw, false);
             base.SetStyle(ControlStyles.UserPaint, true);
@@ -403,7 +404,7 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            PaintAll(e.Graphics);
+            PaintAll(e.Graphics, e.ClipRectangle);
             base.OnPaint(e);
         }
 
@@ -423,6 +424,27 @@ namespace LeonDirectUI.Container
         }
 
         /// <summary>
+        /// 绘制与目标区域相交的可见虚拟控件
+        /// </summary>
+        //TODO: [提醒] [容器子类开发]/[虚拟控件绘制] 虚拟控件使用透明背景时切换图像造成图像重叠，需要在切换前 this.Invalidate(control.Rectangle); 刷新此区域。爱你呦，么么哒；
+        public void PaintAll(Graphics graphics, Rectangle rectangle)
+        {
+            if (graphics == null) throw new Exception("容器绘制时使用的 Graphics 为空");
+            if (Painter == null) throw new Exception("容器绘制时使用的 Painter 为空");
+            if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
+
+            foreach (var control in Controls.Where(
+                control => 
+                control.Visible &&
+                control.IntersectsWith(rectangle)
+                ))
+            {
+                Painter.Paint(graphics, control);
+            }
+            //Console.WriteLine("——< 绘制完成>——————");
+        }
+
+        /// <summary>
         /// 绘制全部可见虚拟控件
         /// </summary>
         public void PaintAll()
@@ -430,25 +452,6 @@ namespace LeonDirectUI.Container
             if (this.Disposing || this.IsDisposed) return;
 
             PaintAll(this.CreateGraphics());
-        }
-
-        /// <summary>
-        /// 绘制与区域相交的虚拟控件
-        /// </summary>
-        public void PaintRectangle(Rectangle rectangle)
-        {
-            if (this.Disposing || this.IsDisposed) return;
-
-            if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
-
-            using (Graphics graphics = this.CreateGraphics())
-            {
-                foreach (var control in Controls.Where(
-                    ctl => ctl.Visible &&
-                    ctl.IntersectsWith(rectangle)))
-
-                    Painter?.Paint(graphics, control);
-            }
         }
 
         /// <summary>

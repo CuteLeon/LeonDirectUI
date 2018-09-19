@@ -63,6 +63,16 @@ namespace LeonDirectUIDemo {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap IMG_2579 {
+            get {
+                object obj = ResourceManager.GetObject("IMG_2579", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap white_emoticons_04 {
             get {
                 object obj = ResourceManager.GetObject("white_emoticons_04", resourceCulture);

@@ -100,5 +100,8 @@
   <ItemGroup>
     <None Include="Resources\white-emoticons-04.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IMG_2579.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

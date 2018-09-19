@@ -94,10 +94,23 @@ namespace LeonDirectUIDemo
             
             PreviewImageBox.Name = "预览图像框";
             PreviewImageBox.Text = string.Empty;
-            PreviewImageBox.BackColor = Color.Silver;
+            PreviewImageBox.BackColor = Color.DimGray;
+            PreviewImageBox.Mouseable = true;
             PreviewImageBox.Image = UIResource.white_emoticons_04;
             PreviewImageBox.ImageAlign = ContentAlignment.MiddleCenter;
             PreviewImageBox.Click += (s, e) => { Console.WriteLine("点击预览图像区域"); };
+            PreviewImageBox.MouseDown += (s, e) =>
+            {
+                PreviewImageBox.Image?.Dispose();
+                this.Invalidate(PreviewImageBox.Rectangle);
+                PreviewImageBox.Image = UIResource.IMG_2579;
+            };
+            PreviewImageBox.MouseUp += (s, e) =>
+            {
+                PreviewImageBox.Image?.Dispose();
+                this.Invalidate(PreviewImageBox.Rectangle);
+                PreviewImageBox.Image = UIResource.white_emoticons_04;
+            };
 
             DescriptionLabel.Name = "描述标签";
             DescriptionLabel.Text = "我是一个自适应的描述标签";
