@@ -19,6 +19,34 @@ namespace LeonDirectUI.Container
     /// </summary>
     public abstract class ContainerBase : Control, Interface.IContainer, IDisposable
     {
+        #region 高频绘制组织器
+
+        //TODO: [提醒] [容器子类开发] 大量绘制任务 {开始前使用 SuspendPaint() 挂起绘制、结束后使用 ResumePaint() 恢复绘制} 以避免频繁绘制造成的性能损耗；
+
+        /// <summary>
+        /// 阻止器计数
+        /// </summary>
+        private byte PaintSuspendCount;
+
+        /// <summary>
+        /// 挂起绘制
+        /// </summary>
+        public void SuspendPaint()
+        {
+            this.PaintSuspendCount += 1;
+        }
+
+        /// <summary>
+        /// 恢复绘制挂起
+        /// </summary>
+        public void ResumePaint()
+        {
+            this.PaintSuspendCount -= 1;
+
+            PaintAll();
+        }
+
+        #endregion
 
         #region 事件
 
@@ -430,6 +458,9 @@ namespace LeonDirectUI.Container
         /// <param name="rectangle">涉及的区域</param>
         protected void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
+            //绘制被挂起，请求也不绘制你，哼！(つД`)
+            if (PaintSuspendCount > 0) return;
+            
             if (this.Disposing || this.IsDisposed)
             {
                 Console.WriteLine("使用释放的对象绘制UI；");

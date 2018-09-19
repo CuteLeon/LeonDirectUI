@@ -11,9 +11,7 @@ using System.Windows.Forms;
 
 namespace LeonDirectUI.DUIControl
 {
-    //TODO: SuspendLayout 和 ResumeLayout 方法密集调整省略计算
-    //TODO: SuspendPaint 和 ResumePaint 方法密集刷新时省略绘制
-
+    
     /// <summary>
     /// 控件基类
     /// </summary>

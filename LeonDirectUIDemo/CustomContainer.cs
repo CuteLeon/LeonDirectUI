@@ -76,6 +76,8 @@ namespace LeonDirectUIDemo
             Add(DescriptionLabel = new ControlBase());
             Add(CloseButton = new ControlBase());
 
+            this.SuspendPaint();
+
             TitleLabel.Name = "标题标签";
             TitleLabel.Text = "我是标题标签哦~";
             TitleLabel.ForeColor = Color.Orange;
@@ -147,6 +149,8 @@ namespace LeonDirectUIDemo
             CloseButton.MouseDown += (s, e) => { CloseButton.ForeColor = Color.WhiteSmoke; CloseButton.BackColor = Color.DimGray; };
             CloseButton.MouseUp += (s, e) => { CloseButton.ForeColor = Color.Black; CloseButton.BackColor = Color.Gray; };
             CloseButton.Click += (s, e) => { Application.Exit(); };
+
+            this.ResumePaint();
         }
 
         /// <summary>
@@ -156,6 +160,8 @@ namespace LeonDirectUIDemo
         /// <param name="height"></param>
         public override void ResetSize(int width, int height)
         {
+            this.SuspendPaint();
+
             CloseButton.SetSize(Math.Min(width, 28), Math.Min(height, 28));
             CloseButton.SetLocation(width - CloseButton.Width, 0);
 
@@ -167,6 +173,8 @@ namespace LeonDirectUIDemo
 
             DescriptionLabel.SetLocation(PreviewImageBox.Right, PreviewImageBox.Top);
             DescriptionLabel.SetSize(width - DescriptionLabel.Left, PreviewImageBox.Height);
+
+            this.ResumePaint();
         }
 
         #endregion
