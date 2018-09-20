@@ -19,12 +19,12 @@ namespace LeonDirectUI.Painter
     {
         #region 绘制 Image 相关
 
-        public static readonly ContentAlignment AnyRightAlign = (ContentAlignment)1092;
-        public static readonly ContentAlignment AnyLeftAlign = (ContentAlignment)273;
-        public static readonly ContentAlignment AnyTopAlign = (ContentAlignment)7;
-        public static readonly ContentAlignment AnyBottomAlign = (ContentAlignment)1792;
-        public static readonly ContentAlignment AnyMiddleAlign = (ContentAlignment)112;
-        public static readonly ContentAlignment AnyCenterAlign = (ContentAlignment)546;
+        protected static readonly ContentAlignment AnyRightAlign = (ContentAlignment)1092;
+        protected static readonly ContentAlignment AnyLeftAlign = (ContentAlignment)273;
+        protected static readonly ContentAlignment AnyTopAlign = (ContentAlignment)7;
+        protected static readonly ContentAlignment AnyBottomAlign = (ContentAlignment)1792;
+        protected static readonly ContentAlignment AnyMiddleAlign = (ContentAlignment)112;
+        protected static readonly ContentAlignment AnyCenterAlign = (ContentAlignment)546;
 
         [ThreadStatic]
         private static ImageAttributes DisabledImageAttr;
