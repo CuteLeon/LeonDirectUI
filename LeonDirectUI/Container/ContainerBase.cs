@@ -43,7 +43,8 @@ namespace LeonDirectUI.Container
         {
             this.PaintSuspendCount -= 1;
 
-            PaintAll();
+            if (PaintSuspendCount == 0)
+                PaintAll();
         }
 
         #endregion
@@ -434,7 +435,7 @@ namespace LeonDirectUI.Container
             if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
 
             foreach (var control in Controls.Where(
-                control => 
+                control =>
                 control.Visible &&
                 control.IntersectsWith(rectangle)
                 ))
@@ -463,7 +464,7 @@ namespace LeonDirectUI.Container
         {
             //绘制被挂起，请求也不绘制你，哼！(つД`)
             if (PaintSuspendCount > 0) return;
-            
+
             if (this.Disposing || this.IsDisposed)
             {
                 Console.WriteLine("使用释放的对象绘制UI；");
@@ -621,7 +622,7 @@ namespace LeonDirectUI.Container
             {
                 if (ActiveControl != null)
                     ActiveControl.OnMouseMove(e);
-                
+
                 base.OnMouseMove(e);
             }
         }
@@ -677,7 +678,7 @@ namespace LeonDirectUI.Container
 
             if (control != null)
                 control.OnMouseUp(e);
-            
+
             base.OnMouseUp(e);
         }
 
@@ -699,7 +700,7 @@ namespace LeonDirectUI.Container
                 ActiveControl = control;
                 ActiveControl.OnMouseEnter(e);
             }
-            
+
             base.OnMouseEnter(e);
         }
 
@@ -714,7 +715,7 @@ namespace LeonDirectUI.Container
                 ActiveControl.OnMouseLeave(e);
                 ActiveControl = null;
             }
-            
+
             base.OnMouseLeave(e);
         }
 
