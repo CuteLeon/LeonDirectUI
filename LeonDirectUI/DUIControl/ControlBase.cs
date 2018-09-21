@@ -275,6 +275,41 @@ namespace LeonDirectUI.DUIControl
             }
         }
 
+        private int _borderSize = 1;
+        /// <summary>
+        /// 边框宽度
+        /// </summary>
+        [DefaultValue(1)]
+        public virtual int BorderSize
+        {
+            get => this._borderSize;
+            set
+            {
+                if (this._borderSize != value)
+                {
+                    this._borderSize = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
+                }
+            }
+        }
+
+        private Color _borderColor = Color.Gray;
+        /// <summary>
+        /// 边框颜色
+        /// </summary>
+        public virtual Color BorderColor
+        {
+            get => this._borderColor;
+            set
+            {
+                if (this._borderColor != value)
+                {
+                    this._borderColor = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
+                }
+            }
+        }
+
         private Padding _padding = new Padding(3, 3, 3, 3);
         /// <summary>
         /// 内边距
