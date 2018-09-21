@@ -246,7 +246,7 @@ namespace LeonDirectUI.Painter
             if (sourceRectangle.Width <= 0 || sourceRectangle.Height <= 0) return;
 
             //懒汉初始化
-            if (DisabledImageAttr == null)
+            if (PainterBase.DisabledImageAttr == null)
             {
                 float[][] array = new float[][] {
                     new float[] { 0.2125f, 0.2125f, 0.2125f, 0f, 0f },
@@ -256,9 +256,9 @@ namespace LeonDirectUI.Painter
                     new float[] { 0.38f, 0.38f, 0.38f, 0f, 1f },
                 };
                 ColorMatrix colorMatrix = new ColorMatrix(array);
-                DisabledImageAttr = new ImageAttributes();
-                DisabledImageAttr.ClearColorKey();
-                DisabledImageAttr.SetColorMatrix(colorMatrix);
+                PainterBase.DisabledImageAttr = new ImageAttributes();
+                PainterBase.DisabledImageAttr.ClearColorKey();
+                PainterBase.DisabledImageAttr.SetColorMatrix(colorMatrix);
             }
 
             graphics.DrawImage(
@@ -269,7 +269,7 @@ namespace LeonDirectUI.Painter
                 sourceRectangle.Width,
                 sourceRectangle.Height,
                 GraphicsUnit.Pixel,
-                DisabledImageAttr
+                PainterBase.DisabledImageAttr
                 );
         }
 

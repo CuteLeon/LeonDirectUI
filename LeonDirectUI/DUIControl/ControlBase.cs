@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace LeonDirectUI.DUIControl
 {
-    
+
     /// <summary>
     /// 控件基类
     /// </summary>
@@ -32,13 +32,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual bool Enabled
         {
-            get => _enabled;
+            get => this._enabled;
             set
             {
-                if (_enabled != value)
+                if (this._enabled != value)
                 {
-                    _enabled = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._enabled = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -49,13 +49,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual bool Visible
         {
-            get => _visible;
+            get => this._visible;
             set
             {
-                if (_visible != value)
+                if (this._visible != value)
                 {
-                    _visible = value;
-                    if (value) PaintRequired?.Invoke(this, Rectangle);
+                    this._visible = value;
+                    if (value) this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -67,19 +67,19 @@ namespace LeonDirectUI.DUIControl
         [AmbientValue(typeof(Size), "0, 0")]
         public virtual Size MaxSize
         {
-            get => _maxSize;
+            get => this._maxSize;
             set
             {
                 if (value.Width < 0) value.Width = 0;
                 if (value.Height < 0) value.Height = 0;
-                if (value.Width > 0 && value.Width < _minSize.Width) _minSize.Width = value.Width;
-                if (value.Height > 0 && value.Height < _minSize.Height) _minSize.Height = value.Height;
+                if (value.Width > 0 && value.Width < this._minSize.Width) this._minSize.Width = value.Width;
+                if (value.Height > 0 && value.Height < this._minSize.Height) this._minSize.Height = value.Height;
 
-                _maxSize = value;
+                this._maxSize = value;
 
-                if ((_maxSize.Width != 0 && _maxSize.Height != 0) &&
-                    (_maxSize.Width < Width || _maxSize.Height < Height))
-                    SetSize(Math.Min(Width, value.Width), Math.Min(Height, value.Height));
+                if ((this._maxSize.Width != 0 && this._maxSize.Height != 0) &&
+                    (this._maxSize.Width < this.Width || this._maxSize.Height < this.Height))
+                    this.SetSize(Math.Min(this.Width, value.Width), Math.Min(this.Height, value.Height));
             }
         }
 
@@ -90,19 +90,19 @@ namespace LeonDirectUI.DUIControl
         [AmbientValue(typeof(Size), "0, 0")]
         public virtual Size MinSize
         {
-            get => _minSize;
+            get => this._minSize;
             set
             {
                 if (value.Width < 0) value.Width = 0;
                 if (value.Height < 0) value.Height = 0;
-                if (value.Width > 0 && value.Width > _maxSize.Width) _maxSize.Width = value.Width;
-                if (value.Height > 0 && value.Height > _maxSize.Height) _maxSize.Height = value.Height;
+                if (value.Width > 0 && value.Width > this._maxSize.Width) this._maxSize.Width = value.Width;
+                if (value.Height > 0 && value.Height > this._maxSize.Height) this._maxSize.Height = value.Height;
 
-                _minSize = value;
+                this._minSize = value;
 
-                if ((_minSize.Width != 0 && _minSize.Height != 0) &&
-                    (_minSize.Width > Width || _minSize.Height > Height))
-                    SetSize(Math.Max(Width, value.Width), Math.Max(Height, value.Height));
+                if ((this._minSize.Width != 0 && this._minSize.Height != 0) &&
+                    (this._minSize.Width > this.Width || this._minSize.Height > this.Height))
+                    this.SetSize(Math.Max(this.Width, value.Width), Math.Max(this.Height, value.Height));
             }
         }
 
@@ -117,13 +117,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual string Text
         {
-            get => _text;
+            get => this._text;
             set
             {
-                if (_text != value)
+                if (this._text != value)
                 {
-                    _text = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._text = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -134,13 +134,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public bool ShowEllipsis
         {
-            get => _showEllipsis;
+            get => this._showEllipsis;
             set
             {
-                if (_showEllipsis != value)
+                if (this._showEllipsis != value)
                 {
-                    _showEllipsis = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._showEllipsis = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -151,13 +151,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual ContentAlignment TextAlign
         {
-            get => _textAlign;
+            get => this._textAlign;
             set
             {
-                if (_textAlign != value)
+                if (this._textAlign != value)
                 {
-                    _textAlign = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._textAlign = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -168,13 +168,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Font Font
         {
-            get => _font;
+            get => this._font;
             set
             {
-                if (_font != value)
+                if (this._font != value)
                 {
-                    _font = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._font = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -185,13 +185,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Color BackColor
         {
-            get => _backColor;
+            get => this._backColor;
             set
             {
-                if (_backColor != value)
+                if (this._backColor != value)
                 {
-                    _backColor = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._backColor = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -202,13 +202,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Color ForeColor
         {
-            get => _foreColor;
+            get => this._foreColor;
             set
             {
-                if (_foreColor != null)
+                if (this._foreColor != null)
                 {
-                    _foreColor = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._foreColor = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -219,11 +219,11 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Image Image
         {
-            get => _image;
+            get => this._image;
             set
             {
-                _image = value;
-                PaintRequired?.Invoke(this, Rectangle);
+                this._image = value;
+                this.PaintRequired?.Invoke(this, this.Rectangle);
             }
         }
 
@@ -233,13 +233,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual ContentAlignment ImageAlign
         {
-            get => _imageAlign;
+            get => this._imageAlign;
             set
             {
-                if (_imageAlign != value)
+                if (this._imageAlign != value)
                 {
-                    _imageAlign = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._imageAlign = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -250,11 +250,11 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Image BackgroundImage
         {
-            get => _backgroundImage;
+            get => this._backgroundImage;
             set
             {
-                _backgroundImage = value;
-                PaintRequired?.Invoke(this, Rectangle);
+                this._backgroundImage = value;
+                this.PaintRequired?.Invoke(this, this.Rectangle);
             }
         }
 
@@ -264,13 +264,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual ImageLayout BackgroundImageLayout
         {
-            get => _backgroundImageLayout;
+            get => this._backgroundImageLayout;
             set
             {
-                if (_backgroundImageLayout != value)
+                if (this._backgroundImageLayout != value)
                 {
-                    _backgroundImageLayout = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._backgroundImageLayout = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -281,13 +281,13 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Padding Padding
         {
-            get => _padding;
+            get => this._padding;
             set
             {
-                if (_padding != value)
+                if (this._padding != value)
                 {
-                    _padding = value;
-                    PaintRequired?.Invoke(this, Rectangle);
+                    this._padding = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -304,26 +304,26 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 右边界
         /// </summary>
-        public virtual int Right { get => Papa.Right; }
+        public virtual int Right { get => this.Papa.Right; }
 
         /// <summary>
         /// 下边界
         /// </summary>
-        public virtual int Bottom { get => Papa.Bottom; }
+        public virtual int Bottom { get => this.Papa.Bottom; }
 
         /// <summary>
         /// 左坐标
         /// </summary>
         public virtual int Left
         {
-            get => Papa.X;
+            get => this.Papa.X;
             set
             {
-                if (Papa.X != value)
+                if (this.Papa.X != value)
                 {
-                    Rectangle lastRectangle = Rectangle;
-                    Papa.X = value;
-                    PaintRequired?.Invoke(this, lastRectangle);
+                    Rectangle lastRectangle = this.Rectangle;
+                    this.Papa.X = value;
+                    this.PaintRequired?.Invoke(this, lastRectangle);
                 }
             }
         }
@@ -333,14 +333,14 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual int Top
         {
-            get => Papa.Y;
+            get => this.Papa.Y;
             set
             {
-                if (Papa.Y != value)
+                if (this.Papa.Y != value)
                 {
-                    Rectangle lastRectangle = Rectangle;
-                    Papa.Y = value;
-                    PaintRequired?.Invoke(this, lastRectangle);
+                    Rectangle lastRectangle = this.Rectangle;
+                    this.Papa.Y = value;
+                    this.PaintRequired?.Invoke(this, lastRectangle);
                 }
             }
         }
@@ -350,18 +350,18 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual int Width
         {
-            get => Papa.Width;
+            get => this.Papa.Width;
             set
             {
                 int result = Math.Max(value, 0);
-                if (MinSize.Width > 0) result = Math.Max(MinSize.Width, result);
-                if (MaxSize.Width > 0) result = Math.Min(MaxSize.Width, result);
+                if (this.MinSize.Width > 0) result = Math.Max(this.MinSize.Width, result);
+                if (this.MaxSize.Width > 0) result = Math.Min(this.MaxSize.Width, result);
 
-                if (Papa.Width != result)
+                if (this.Papa.Width != result)
                 {
-                    Rectangle lastRectangle = Rectangle;
-                    Papa.Width = result;
-                    PaintRequired?.Invoke(this, lastRectangle);
+                    Rectangle lastRectangle = this.Rectangle;
+                    this.Papa.Width = result;
+                    this.PaintRequired?.Invoke(this, lastRectangle);
                 }
             }
         }
@@ -371,18 +371,18 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual int Height
         {
-            get => Papa.Height;
+            get => this.Papa.Height;
             set
             {
                 int result = Math.Max(value, 0);
-                if (MinSize.Height > 0) result = Math.Max(MinSize.Height, result);
-                if (MaxSize.Height > 0) result = Math.Min(MaxSize.Height, result);
+                if (this.MinSize.Height > 0) result = Math.Max(this.MinSize.Height, result);
+                if (this.MaxSize.Height > 0) result = Math.Min(this.MaxSize.Height, result);
 
-                if (Papa.Height != result)
+                if (this.Papa.Height != result)
                 {
-                    Rectangle lastRectangle = Rectangle;
-                    Papa.Height = result;
-                    PaintRequired?.Invoke(this, lastRectangle);
+                    Rectangle lastRectangle = this.Rectangle;
+                    this.Papa.Height = result;
+                    this.PaintRequired?.Invoke(this, lastRectangle);
                 }
             }
         }
@@ -392,10 +392,10 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Rectangle Rectangle
         {
-            get => Papa;
+            get => this.Papa;
             set
             {
-                SetBounds(value.Left, value.Top, value.Width, value.Height);
+                this.SetBounds(value.Left, value.Top, value.Width, value.Height);
             }
         }
 
@@ -404,10 +404,10 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Size Size
         {
-            get => Papa.Size;
+            get => this.Papa.Size;
             set
             {
-                SetSize(value.Width, value.Height);
+                this.SetSize(value.Width, value.Height);
             }
         }
 
@@ -416,10 +416,10 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public virtual Point Location
         {
-            get => Papa.Location;
+            get => this.Papa.Location;
             set
             {
-                SetLocation(value.X, value.Y);
+                this.SetLocation(value.X, value.Y);
             }
         }
 
@@ -433,19 +433,19 @@ namespace LeonDirectUI.DUIControl
         public virtual void SetBounds(int left, int top, int width, int height)
         {
             int Xresult = Math.Max(width, 0), Yresult = Math.Max(height, 0);
-            if (MinSize.Width > 0) Xresult = Math.Max(MinSize.Width, Xresult);
-            if (MaxSize.Width > 0) Xresult = Math.Min(MaxSize.Width, Xresult);
-            if (MinSize.Height > 0) Yresult = Math.Max(MinSize.Height, Yresult);
-            if (MaxSize.Height > 0) Yresult = Math.Min(MaxSize.Height, Yresult);
+            if (this.MinSize.Width > 0) Xresult = Math.Max(this.MinSize.Width, Xresult);
+            if (this.MaxSize.Width > 0) Xresult = Math.Min(this.MaxSize.Width, Xresult);
+            if (this.MinSize.Height > 0) Yresult = Math.Max(this.MinSize.Height, Yresult);
+            if (this.MaxSize.Height > 0) Yresult = Math.Min(this.MaxSize.Height, Yresult);
 
-            if (Papa.X != left || Papa.Y != top || Papa.Width != Xresult || Papa.Height != Yresult)
+            if (this.Papa.X != left || this.Papa.Y != top || this.Papa.Width != Xresult || this.Papa.Height != Yresult)
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.X = left;
-                Papa.Y = top;
-                Papa.Width = Xresult;
-                Papa.Height = Yresult;
-                PaintRequired?.Invoke(this, lastRectangle);
+                Rectangle lastRectangle = this.Rectangle;
+                this.Papa.X = left;
+                this.Papa.Y = top;
+                this.Papa.Width = Xresult;
+                this.Papa.Height = Yresult;
+                this.PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -457,17 +457,17 @@ namespace LeonDirectUI.DUIControl
         public virtual void SetSize(int width, int height)
         {
             int Xresult = Math.Max(width, 0), Yresult = Math.Max(height, 0);
-            if (MinSize.Width > 0) Xresult = Math.Max(MinSize.Width, Xresult);
-            if (MaxSize.Width > 0) Xresult = Math.Min(MaxSize.Width, Xresult);
-            if (MinSize.Height > 0) Yresult = Math.Max(MinSize.Height, Yresult);
-            if (MaxSize.Height > 0) Yresult = Math.Min(MaxSize.Height, Yresult);
+            if (this.MinSize.Width > 0) Xresult = Math.Max(this.MinSize.Width, Xresult);
+            if (this.MaxSize.Width > 0) Xresult = Math.Min(this.MaxSize.Width, Xresult);
+            if (this.MinSize.Height > 0) Yresult = Math.Max(this.MinSize.Height, Yresult);
+            if (this.MaxSize.Height > 0) Yresult = Math.Min(this.MaxSize.Height, Yresult);
 
-            if (Papa.Width != Xresult || Papa.Height != Yresult)
+            if (this.Papa.Width != Xresult || this.Papa.Height != Yresult)
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.Width = Xresult;
-                Papa.Height = Yresult;
-                PaintRequired?.Invoke(this, lastRectangle);
+                Rectangle lastRectangle = this.Rectangle;
+                this.Papa.Width = Xresult;
+                this.Papa.Height = Yresult;
+                this.PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -478,12 +478,12 @@ namespace LeonDirectUI.DUIControl
         /// <param name="top">上坐标</param>
         public virtual void SetLocation(int left, int top)
         {
-            if (Papa.X != left || Papa.Y != top)
+            if (this.Papa.X != left || this.Papa.Y != top)
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.X = left;
-                Papa.Y = top;
-                PaintRequired?.Invoke(this, lastRectangle);
+                Rectangle lastRectangle = this.Rectangle;
+                this.Papa.X = left;
+                this.Papa.Y = top;
+                this.PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -494,18 +494,18 @@ namespace LeonDirectUI.DUIControl
         /// <param name="height">放大高度</param>
         public virtual void Inflate(int width, int height)
         {
-            int Xresult = Math.Max(Papa.Width + width, 0), Yresult = Math.Max(Papa.Height + height, 0);
-            if (MinSize.Width > 0) Xresult = Math.Max(MinSize.Width, Xresult);
-            if (MaxSize.Width > 0) Xresult = Math.Min(MaxSize.Width, Xresult);
-            if (MinSize.Height > 0) Yresult = Math.Max(MinSize.Height, Yresult);
-            if (MaxSize.Height > 0) Yresult = Math.Min(MaxSize.Height, Yresult);
+            int Xresult = Math.Max(this.Papa.Width + width, 0), Yresult = Math.Max(this.Papa.Height + height, 0);
+            if (this.MinSize.Width > 0) Xresult = Math.Max(this.MinSize.Width, Xresult);
+            if (this.MaxSize.Width > 0) Xresult = Math.Min(this.MaxSize.Width, Xresult);
+            if (this.MinSize.Height > 0) Yresult = Math.Max(this.MinSize.Height, Yresult);
+            if (this.MaxSize.Height > 0) Yresult = Math.Min(this.MaxSize.Height, Yresult);
 
-            if (Papa.Width != Xresult || Papa.Height != Yresult)
+            if (this.Papa.Width != Xresult || this.Papa.Height != Yresult)
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.Width = Xresult;
-                Papa.Height = Yresult;
-                PaintRequired?.Invoke(this, lastRectangle);
+                Rectangle lastRectangle = this.Rectangle;
+                this.Papa.Width = Xresult;
+                this.Papa.Height = Yresult;
+                this.PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -515,21 +515,21 @@ namespace LeonDirectUI.DUIControl
         /// <param name="rect">目标区域</param>
         public virtual void Intersect(Rectangle rect)
         {
-            Rectangle result = Rectangle;
+            Rectangle result = this.Rectangle;
             result.Intersect(rect);
-            if (MinSize.Width > 0) result.Width = Math.Max(MinSize.Width, result.Width);
-            if (MaxSize.Width > 0) result.Width = Math.Min(MaxSize.Width, result.Width);
-            if (MinSize.Height > 0) result.Height = Math.Max(MinSize.Height, result.Height);
-            if (MaxSize.Height > 0) result.Height = Math.Min(MaxSize.Height, result.Height);
+            if (this.MinSize.Width > 0) result.Width = Math.Max(this.MinSize.Width, result.Width);
+            if (this.MaxSize.Width > 0) result.Width = Math.Min(this.MaxSize.Width, result.Width);
+            if (this.MinSize.Height > 0) result.Height = Math.Max(this.MinSize.Height, result.Height);
+            if (this.MaxSize.Height > 0) result.Height = Math.Min(this.MaxSize.Height, result.Height);
 
-            if (result.X != Papa.Left || result.Y != Papa.Top || result.Width != Papa.Width || result.Height != Papa.Height)
+            if (result.X != this.Papa.Left || result.Y != this.Papa.Top || result.Width != this.Papa.Width || result.Height != this.Papa.Height)
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.X = result.Left;
-                Papa.Y = result.Top;
-                Papa.Width = result.Width;
-                Papa.Height = result.Height;
-                PaintRequired?.Invoke(this, lastRectangle);
+                Rectangle lastRectangle = this.Rectangle;
+                this.Papa.X = result.Left;
+                this.Papa.Y = result.Top;
+                this.Papa.Width = result.Width;
+                this.Papa.Height = result.Height;
+                this.PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -541,9 +541,9 @@ namespace LeonDirectUI.DUIControl
         {
             if (point.X != 0 || point.Y != 0)
             {
-                Rectangle lastRectangle = Rectangle;
-                Papa.Offset(point);
-                PaintRequired?.Invoke(this, lastRectangle);
+                Rectangle lastRectangle = this.Rectangle;
+                this.Papa.Offset(point);
+                this.PaintRequired?.Invoke(this, lastRectangle);
             }
         }
 
@@ -557,34 +557,34 @@ namespace LeonDirectUI.DUIControl
         /// <param name="x">水平坐标</param>
         /// <param name="y">垂直坐标</param>
         /// <returns></returns>
-        public virtual bool Contains(int x, int y) => Papa.Contains(x, y);
+        public virtual bool Contains(int x, int y) => this.Papa.Contains(x, y);
 
         /// <summary>
         /// 目标点是否包含在区域内
         /// </summary>
         /// <param name="point">目标坐标</param>
         /// <returns></returns>
-        public virtual bool Contains(Point point) => Papa.Contains(point);
+        public virtual bool Contains(Point point) => this.Papa.Contains(point);
 
         /// <summary>
         /// 目标区域是否完全包含在区域内
         /// </summary>
         /// <param name="rectangle">目标区域</param>
         /// <returns></returns>
-        public virtual bool Contains(Rectangle rectangle) => Papa.Contains(rectangle);
+        public virtual bool Contains(Rectangle rectangle) => this.Papa.Contains(rectangle);
 
         /// <summary>
         /// 是否与目标区域相交
         /// </summary>
         /// <param name="rect">目标区域</param>
         /// <returns></returns>
-        public virtual bool IntersectsWith(Rectangle rect) => Papa.IntersectsWith(rect);
+        public virtual bool IntersectsWith(Rectangle rect) => this.Papa.IntersectsWith(rect);
 
         /// <summary>
         /// 区域是否为空
         /// </summary>
         /// <returns></returns>
-        public virtual bool IsEmpty() => Papa.IsEmpty;
+        public virtual bool IsEmpty() => this.Papa.IsEmpty;
 
         #endregion
 
@@ -597,14 +597,14 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public MouseStates MouseState
         {
-            get => mouseState;
+            get => this.mouseState;
             protected set
             {
-                if (mouseState != value)
+                if (this.mouseState != value)
                 {
-                    mouseState = value;
-                    MouseStateChanged?.Invoke(this, value);
-                    //PaintRequired?.Invoke(this, Rectangle);
+                    this.mouseState = value;
+                    this.MouseStateChanged?.Invoke(this, value);
+                    //this.PaintRequired?.Invoke(this, this.Rectangle);
                 }
             }
         }
@@ -616,20 +616,20 @@ namespace LeonDirectUI.DUIControl
         //TODO: [提醒] [虚拟控件使用] 虚拟控件需要开启此属性才可响应鼠标事件
         public virtual bool Mouseable
         {
-            get => _mouseable;
+            get => this._mouseable;
             set
             {
-                if (_mouseable != value)
+                if (this._mouseable != value)
                 {
-                    _mouseable = value;
+                    this._mouseable = value;
                     //禁用鼠标支持时若鼠标状态不是正常状态则恢复鼠标状态并请求重绘
-                    if (!value && MouseState != MouseStates.Normal)
+                    if (!value && this.MouseState != MouseStates.Normal)
                     {
-                        MouseState = MouseStates.Normal;
-                        PaintRequired?.Invoke(this, Rectangle);
+                        this.MouseState = MouseStates.Normal;
+                        this.PaintRequired?.Invoke(this, this.Rectangle);
                     }
                     //触发鼠标支持状态改变事件
-                    MouseableChanged?.Invoke(this, value);
+                    this.MouseableChanged?.Invoke(this, value);
                 }
             }
         }
@@ -662,37 +662,31 @@ namespace LeonDirectUI.DUIControl
         /// <summary>
         /// 鼠标进入事件
         /// </summary>
-        /// <param name="e"></param>
         public event EventHandler MouseEnter;
 
         /// <summary>
         /// 鼠标移动事件
         /// </summary>
-        /// <param name="e"></param>
         public event MouseEventHandler MouseMove;
 
         /// <summary>
         /// 鼠标悬停事件
         /// </summary>
-        /// <param name="e"></param>
         public event EventHandler MouseHover;
 
         /// <summary>
         /// 鼠标按下事件
         /// </summary>
-        /// <param name="e"></param>
         public event MouseEventHandler MouseDown;
 
         /// <summary>
         /// 鼠标抬起事件
         /// </summary>
-        /// <param name="e"></param>
         public event MouseEventHandler MouseUp;
 
         /// <summary>
         /// 鼠标离开事件
         /// </summary>
-        /// <param name="e"></param>
         public event EventHandler MouseLeave;
 
         /// <summary>
@@ -719,7 +713,7 @@ namespace LeonDirectUI.DUIControl
         /// </summary>
         public void OnPaintRequired()
         {
-            PaintRequired?.Invoke(this, Rectangle);
+            this.PaintRequired?.Invoke(this, this.Rectangle);
         }
 
         /// <summary>
@@ -729,11 +723,11 @@ namespace LeonDirectUI.DUIControl
         public void OnClick(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 点击");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                //MouseState = MouseStates.Press;
-                Click?.Invoke(this, e);
-                //MouseState = MouseStates.Normal;
+                //this.MouseState = MouseStates.Press;
+                this.Click?.Invoke(this, e);
+                //this.MouseState = MouseStates.Normal;
             }
         }
 
@@ -744,11 +738,11 @@ namespace LeonDirectUI.DUIControl
         public void OnDoubleClick(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 双击");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                //MouseState = MouseStates.Press;
+                //this.MouseState = MouseStates.Press;
                 DoubleClick?.Invoke(this, e);
-                //MouseState = MouseStates.Normal;
+                //this.MouseState = MouseStates.Normal;
             }
         }
 
@@ -759,10 +753,10 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseEnter(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标进入");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                MouseState = MouseStates.Hover;
-                MouseEnter?.Invoke(this, e);
+                this.MouseState = MouseStates.Hover;
+                this.MouseEnter?.Invoke(this, e);
             }
         }
 
@@ -773,10 +767,10 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseMove(MouseEventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标移动");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                MouseState = MouseStates.Hover;
-                MouseMove?.Invoke(this, e);
+                this.MouseState = MouseStates.Hover;
+                this.MouseMove?.Invoke(this, e);
             }
         }
 
@@ -787,10 +781,10 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseHover(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标悬停");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                MouseState = MouseStates.Hover;
-                MouseHover?.Invoke(this, e);
+                this.MouseState = MouseStates.Hover;
+                this.MouseHover?.Invoke(this, e);
             }
         }
 
@@ -801,10 +795,10 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseDown(MouseEventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标按压");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                MouseState = MouseStates.Press;
-                MouseDown?.Invoke(this, e);
+                this.MouseState = MouseStates.Press;
+                this.MouseDown?.Invoke(this, e);
             }
         }
 
@@ -815,10 +809,10 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseUp(MouseEventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标抬起");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                MouseState = MouseStates.Hover;
-                MouseUp?.Invoke(this, e);
+                this.MouseState = MouseStates.Hover;
+                this.MouseUp?.Invoke(this, e);
             }
         }
 
@@ -829,10 +823,10 @@ namespace LeonDirectUI.DUIControl
         public void OnMouseLeave(EventArgs e)
         {
             //Console.WriteLine($"{Name} : 鼠标离开");
-            if (Visible && Enabled && Mouseable)
+            if (this.Visible && this.Enabled && this.Mouseable)
             {
-                MouseState = MouseStates.Normal;
-                MouseLeave?.Invoke(this, e);
+                this.MouseState = MouseStates.Normal;
+                this.MouseLeave?.Invoke(this, e);
             }
         }
 
@@ -844,11 +838,11 @@ namespace LeonDirectUI.DUIControl
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    Disposing?.Invoke(this, EventArgs.Empty);
+                    this.Disposing?.Invoke(this, EventArgs.Empty);
 
                     this._font = null;
                     this._backgroundImage = null;
@@ -857,14 +851,14 @@ namespace LeonDirectUI.DUIControl
 
                 // 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
         // 添加此代码以正确实现可处置模式。
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
 
             GC.SuppressFinalize(this);
         }

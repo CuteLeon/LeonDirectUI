@@ -19,6 +19,8 @@ namespace LeonDirectUI.Container
         protected static readonly ContentAlignment AnyTopAlign = (ContentAlignment)7;
         protected static readonly ContentAlignment AnyBottomAlign = (ContentAlignment)1792;
         
+        //TODO: [提醒] [自由边框容器使用] 拖动和调整边框均有对应的属性开关，且默认为关闭，需要启用此功能需要赋属性为 true；
+
         /// <summary>
         /// 允许拖拽
         /// </summary>
@@ -56,12 +58,12 @@ namespace LeonDirectUI.Container
         public override void ResetSize(int width, int height) { }
 
         /// <summary>
-        /// 覆写触发鼠标按压方法
+        /// 覆写触发鼠标按压方法（return 时会拦截基类事件）
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (PreMouseDown(e)) return;
+            if (this.PreMouseDown(e)) return;
 
             base.OnMouseDown(e);
         }
@@ -74,38 +76,38 @@ namespace LeonDirectUI.Container
         //TODO: [提醒] 自定义拖拽开始和调整大小开始的区域和条件
         protected virtual bool PreMouseDown(MouseEventArgs e)
         {
-            if (Dragable && e.Button == MouseButtons.Left &&
+            if (this.Dragable && e.Button == MouseButtons.Left &&
                 5 < e.Location.X && e.Location.X < this.Width - 5 && 5 < e.Location.Y && e.Location.Y <= 10)
             {
-                Dragging = true;
-                MousePoint = MousePosition;
+                this.Dragging = true;
+                this.MousePoint = MousePosition;
                 return true;
             }
 
-            if (Sizable && e.Button == MouseButtons.Left &&
-                ((e.Location.X <= 5 || e.Location.X >= this.Width - 5) ||
-                (e.Location.Y <= 5 || e.Location.Y >= this.Height - 5)))
+            if (this.Sizable && e.Button == MouseButtons.Left &&
+                (e.Location.X <= 5 || e.Location.X >= this.Width - 5 ||
+                e.Location.Y <= 5 || e.Location.Y >= this.Height - 5))
             {
-                Sizing = true;
-                MousePoint = MousePosition;
+                this.Sizing = true;
+                this.MousePoint = MousePosition;
 
                 //记录调整大小的边界
                 if (e.X >= this.Width - 5 && e.Y >= this.Height - 5)
-                    SizableBound = ContentAlignment.BottomRight;
+                    this.SizableBound = ContentAlignment.BottomRight;
                 else if (e.X <= 5 && e.Y <= 5)
-                    SizableBound = ContentAlignment.TopLeft;
+                    this.SizableBound = ContentAlignment.TopLeft;
                 else if (e.X <= 5 && e.Y >= this.Height - 5)
                     SizableBound = ContentAlignment.BottomLeft;
                 else if (e.X >= this.Width - 5 && e.Y <= 5)
-                    SizableBound = ContentAlignment.TopRight;
+                    this.SizableBound = ContentAlignment.TopRight;
                 else if (e.X >= this.Width - 5)
-                    SizableBound = ContentAlignment.MiddleRight;
+                    this.SizableBound = ContentAlignment.MiddleRight;
                 else if (e.Y >= this.Height - 5)
-                    SizableBound = ContentAlignment.BottomCenter;
+                    this.SizableBound = ContentAlignment.BottomCenter;
                 else if (e.X <= 5)
-                    SizableBound = ContentAlignment.MiddleLeft;
+                    this.SizableBound = ContentAlignment.MiddleLeft;
                 else if (e.Y <= 5)
-                    SizableBound = ContentAlignment.TopCenter;
+                    this.SizableBound = ContentAlignment.TopCenter;
 
                 return true;
             }
@@ -114,25 +116,27 @@ namespace LeonDirectUI.Container
         }
 
         /// <summary>
-        /// 覆写触发鼠标移动方法
+        /// 覆写触发鼠标移动方法（return 时会拦截基类事件）
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (Dragable)
+            if (this.Dragable)
             {
-                if (Dragging)
+                if (this.Dragging)
                 {
+                    //拖动位置
                     Point cpoint = MousePosition;
                     int x = cpoint.X - MousePoint.X;
                     int y = cpoint.Y - MousePoint.Y;
                     this.Left += x;
                     this.Top += y;
-                    MousePoint = cpoint;
+                    this.MousePoint = cpoint;
                     return;
                 }
                 else
                 {
+                    //进入允许拖动的区域
                     Point ClientPoint = this.PointToClient(MousePosition);
                     if (5 < ClientPoint.X && ClientPoint.X < this.Width - 5 && 5 < ClientPoint.Y && ClientPoint.Y <= 10)
                     {
@@ -142,32 +146,33 @@ namespace LeonDirectUI.Container
                 }
             }
 
-            if (Sizable)
+            if (this.Sizable)
             {
-                if (Sizing)
+                if (this.Sizing)
                 {
-                    if (SizableBound == ContentAlignment.MiddleCenter) return;
+                    if (this.SizableBound == ContentAlignment.MiddleCenter) return;
 
+                    //调整尺寸
                     Point cpoint = MousePosition;
                     int x = cpoint.X - MousePoint.X;
                     int y = cpoint.Y - MousePoint.Y;
-                    MousePoint = cpoint;
+                    this.MousePoint = cpoint;
 
                     this.SuspendPaint();
-                    if ((SizableBound & AnyLeftAlign) != (ContentAlignment)0)
+                    if ((this.SizableBound & SizableContainer.AnyLeftAlign) != (ContentAlignment)0)
                     {
                         this.Left += x;
                         this.Width -= x;
                     }
-                    else if ((SizableBound & AnyRightAlign) != (ContentAlignment)0)
+                    else if ((this.SizableBound & SizableContainer.AnyRightAlign) != (ContentAlignment)0)
                         this.Width += x;
 
-                    if ((SizableBound & AnyTopAlign) != (ContentAlignment)0)
+                    if ((this.SizableBound & SizableContainer.AnyTopAlign) != (ContentAlignment)0)
                     {
                         this.Top += y;
                         this.Height -= y;
                     }
-                    else if ((SizableBound & AnyBottomAlign) != (ContentAlignment)0)
+                    else if ((SizableBound & SizableContainer.AnyBottomAlign) != (ContentAlignment)0)
                         this.Height += y;
 
                     this.ResumePaint();
@@ -175,6 +180,7 @@ namespace LeonDirectUI.Container
                 }
                 else
                 {
+                    //鼠标进入允许调整尺寸的区域
                     Point ClientPoint = this.PointToClient(MousePosition);
                     if (ClientPoint.X >= this.Width - 5 && ClientPoint.Y >= this.Height - 5)
                     {
@@ -219,6 +225,7 @@ namespace LeonDirectUI.Container
                 }
             }
 
+            //恢复鼠标样式为默认样式
             if(this.Cursor != Cursors.Default)
                 this.Cursor = Cursors.Default;
 
@@ -226,13 +233,14 @@ namespace LeonDirectUI.Container
         }
 
         /// <summary>
-        /// 覆写触发鼠标抬起方法
+        /// 覆写触发鼠标抬起方法（return 时会拦截基类事件）
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (Dragging || Sizing)
+            if (this.Dragging || this.Sizing)
             {
+                //恢复拖动或调整尺寸状态
                 this.Dragging = false;
                 this.Sizing = false;
                 this.SizableBound = ContentAlignment.MiddleCenter;

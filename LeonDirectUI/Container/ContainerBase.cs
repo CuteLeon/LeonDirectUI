@@ -43,8 +43,8 @@ namespace LeonDirectUI.Container
         {
             this.PaintSuspendCount -= 1;
 
-            if (PaintSuspendCount == 0)
-                PaintAll();
+            if (this.PaintSuspendCount == 0)
+                this.PaintAll();
         }
 
         #endregion
@@ -70,7 +70,7 @@ namespace LeonDirectUI.Container
         /// 控件列表
         /// </summary>
         [Browsable(false)]
-        public new ControlBase[] Controls => _controls.ToArray();
+        public new ControlBase[] Controls => this._controls.ToArray();
         /// <summary>
         /// 绘制器
         /// </summary>
@@ -100,7 +100,7 @@ namespace LeonDirectUI.Container
             base.SetStyle(ControlStyles.UserPaint, true);
 
             //初始化布局
-            InitializeLayout();
+            this.InitializeLayout();
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace LeonDirectUI.Container
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public ControlBase this[int index] => Controls[index];
+        public ControlBase this[int index] => this.Controls[index];
 
         /// <summary>
         /// 注入全局绘制器
@@ -116,7 +116,7 @@ namespace LeonDirectUI.Container
         /// <param name="painter"></param>
         public void SetPainter(IPainter painter)
         {
-            Painter = painter ?? throw new Exception("注入绘制器为空");
+            this.Painter = painter ?? throw new Exception("注入绘制器为空");
             //切换绘制器后重绘
             this.Invalidate();
         }
@@ -127,7 +127,7 @@ namespace LeonDirectUI.Container
         public new void Dispose()
         {
             //清空控件列表
-            Clear();
+            this.Clear();
             base.Dispose();
         }
 
@@ -143,8 +143,8 @@ namespace LeonDirectUI.Container
 
             try
             {
-                control.Disposing += Control_Dispoing;
-                control.PaintRequired += Control_PaintRequired;
+                control.Disposing += this.Control_Dispoing;
+                control.PaintRequired += this.Control_PaintRequired;
             }
             catch { }
             finally { }
@@ -162,8 +162,8 @@ namespace LeonDirectUI.Container
 
             try
             {
-                control.Disposing -= Control_Dispoing;
-                control.PaintRequired -= Control_PaintRequired;
+                control.Disposing -= this.Control_Dispoing;
+                control.PaintRequired -= this.Control_PaintRequired;
             }
             catch { }
             finally { }
@@ -181,11 +181,11 @@ namespace LeonDirectUI.Container
         /// <param name="control">虚拟控件</param>
         public virtual void Add(ControlBase control)
         {
-            RegisterControl(control);
+            this.RegisterControl(control);
 
-            _controls.Add(control);
+            this._controls.Add(control);
 
-            OnControlAdded(control);
+            this.OnControlAdded(control);
         }
 
         /// <summary>
@@ -195,9 +195,9 @@ namespace LeonDirectUI.Container
         public virtual void AddRange(IEnumerable<ControlBase> controls)
         {
             foreach (var control in controls)
-                Add(control);
+                this.Add(control);
 
-            //_controls.AddRange(controls);
+            //this._controls.AddRange(controls);
         }
 
         /// <summary>
@@ -207,11 +207,11 @@ namespace LeonDirectUI.Container
         /// <param name="control">虚拟控件</param>
         public virtual void Insert(int index, ControlBase control)
         {
-            RegisterControl(control);
+            this.RegisterControl(control);
 
-            _controls.Insert(index, control);
+            this._controls.Insert(index, control);
 
-            OnControlAdded(control);
+            this.OnControlAdded(control);
         }
 
         /// <summary>
@@ -221,10 +221,10 @@ namespace LeonDirectUI.Container
         /// <param name="controls">虚拟控件数组</param>
         public virtual void InsertRange(int index, IEnumerable<ControlBase> controls)
         {
-            _controls.ForEach(
+            this._controls.ForEach(
                 (control) =>
                 {
-                    Insert(index, control);
+                    this.Insert(index, control);
                     index++;
                 });
         }
@@ -240,11 +240,11 @@ namespace LeonDirectUI.Container
         /// <returns></returns>
         public virtual bool Remove(ControlBase control)
         {
-            DisregisterControl(control);
+            this.DisregisterControl(control);
 
-            var result = _controls.Remove(control);
+            var result = this._controls.Remove(control);
 
-            OnControlRemoved(control);
+            this.OnControlRemoved(control);
             return result;
         }
 
@@ -254,7 +254,7 @@ namespace LeonDirectUI.Container
         /// <param name="index">标识</param>
         public virtual void RemoveAt(int index)
         {
-            Remove(_controls[index]);
+            this.Remove(this._controls[index]);
         }
 
         /// <summary>
@@ -264,8 +264,8 @@ namespace LeonDirectUI.Container
         /// <param name="count">移除长度</param>
         public virtual void RemoveRange(int index, int count)
         {
-            foreach (var control in _controls.Skip(index).Take(count))
-                Remove(control);
+            foreach (var control in this._controls.Skip(index).Take(count))
+                this.Remove(control);
         }
 
         /// <summary>
@@ -275,11 +275,11 @@ namespace LeonDirectUI.Container
         /// <returns></returns>
         public virtual int RemoveAll(Predicate<ControlBase> predicate)
         {
-            List<ControlBase> controls = _controls.FindAll(predicate);
+            List<ControlBase> controls = this._controls.FindAll(predicate);
 
             foreach (var control in controls)
             {
-                Remove(control);
+                this.Remove(control);
             }
 
             return controls.Count;
@@ -290,8 +290,8 @@ namespace LeonDirectUI.Container
         /// </summary>
         public virtual void Clear()
         {
-            while (_controls.Count != 0)
-                RemoveAt(_controls.Count - 1);
+            while (this._controls.Count != 0)
+                this.RemoveAt(this._controls.Count - 1);
         }
 
         #endregion
@@ -302,7 +302,7 @@ namespace LeonDirectUI.Container
         /// <param name="predicate">条件谓词</param>
         /// <returns></returns>
         public virtual bool Exists(Predicate<ControlBase> predicate)
-            => _controls.Exists(predicate);
+            => this._controls.Exists(predicate);
 
         /// <summary>
         /// 获取符合条件谓词的元素标识
@@ -310,7 +310,7 @@ namespace LeonDirectUI.Container
         /// <param name="predicate">条件谓词</param>
         /// <returns></returns>
         public virtual int FindIndex(Predicate<ControlBase> predicate)
-            => _controls.FindIndex(predicate);
+            => this._controls.FindIndex(predicate);
 
         /// <summary>
         /// 查找符合条件谓词的最一个元素
@@ -318,7 +318,7 @@ namespace LeonDirectUI.Container
         /// <param name="predicate">条件谓词</param>
         /// <returns></returns>
         public virtual ControlBase FindLast(Predicate<ControlBase> predicate)
-            => _controls.FindLast(predicate);
+            => this._controls.FindLast(predicate);
 
         /// <summary>
         /// 查找符合条件谓词的最一个元素的标识
@@ -326,14 +326,14 @@ namespace LeonDirectUI.Container
         /// <param name="predicate">条件谓词</param>
         /// <returns></returns>
         public virtual int FindLastIndex(Predicate<ControlBase> predicate)
-            => _controls.FindLastIndex(predicate);
+            => this._controls.FindLastIndex(predicate);
 
         /// <summary>
         /// 对每个元素执行动作
         /// </summary>
         /// <param name="action"></param>
         public virtual void ForEach(Action<ControlBase> action)
-            => _controls.ForEach(action);
+            => this._controls.ForEach(action);
 
         /// <summary>
         /// 获取元素的标识
@@ -341,7 +341,7 @@ namespace LeonDirectUI.Container
         /// <param name="control">虚拟控件</param>
         /// <returns></returns>
         public virtual int IndexOf(ControlBase control)
-            => _controls.IndexOf(control);
+            => this._controls.IndexOf(control);
 
         /// <summary>
         /// 倒序查找虚拟控件的标识
@@ -349,27 +349,27 @@ namespace LeonDirectUI.Container
         /// <param name="control">虚拟控件</param>
         /// <returns></returns>
         public virtual int LastIndexOf(ControlBase control)
-            => _controls.LastIndexOf(control);
+            => this._controls.LastIndexOf(control);
 
         /// <summary>
         /// 使用默认比较器排序
         /// </summary>
         public virtual void Sort()
-            => _controls.Sort();
+            => this._controls.Sort();
 
         /// <summary>
         /// 使用指定比较器排序
         /// </summary>
         /// <param name="comparison">比较器</param>
         public virtual void Sort(Comparison<ControlBase> comparison)
-            => _controls.Sort(comparison);
+            => this._controls.Sort(comparison);
 
         /// <summary>
         /// 使用指定比较器排序
         /// </summary>
         /// <param name="comparer">比较器</param>
         public virtual void Sort(IComparer<ControlBase> comparer)
-            => _controls.Sort(comparer);
+            => this._controls.Sort(comparer);
 
         /// <summary>
         /// 使用指定比较器
@@ -378,7 +378,7 @@ namespace LeonDirectUI.Container
         /// <param name="count">排序区域长度</param>
         /// <param name="comparer">比较器</param>
         public virtual void Sort(int index, int count, IComparer<ControlBase> comparer)
-            => _controls.Sort(index, count, comparer);
+            => this._controls.Sort(index, count, comparer);
 
         #endregion
 
@@ -405,7 +405,7 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            PaintAll(e.Graphics, e.ClipRectangle);
+            this.PaintAll(e.Graphics, e.ClipRectangle);
             base.OnPaint(e);
         }
 
@@ -415,11 +415,11 @@ namespace LeonDirectUI.Container
         public void PaintAll(Graphics graphics)
         {
             if (graphics == null) throw new Exception("容器绘制时使用的 Graphics 为空");
-            if (Painter == null) throw new Exception("容器绘制时使用的 Painter 为空");
+            if (this.Painter == null) throw new Exception("容器绘制时使用的 Painter 为空");
 
-            foreach (var control in Controls.Where(c => c.Visible))
+            foreach (var control in this.Controls.Where(c => c.Visible))
             {
-                Painter.Paint(graphics, control);
+                this.Painter.Paint(graphics, control);
             }
             //Console.WriteLine("——< 绘制完成>——————");
         }
@@ -431,16 +431,16 @@ namespace LeonDirectUI.Container
         public void PaintAll(Graphics graphics, Rectangle rectangle)
         {
             if (graphics == null) throw new Exception("容器绘制时使用的 Graphics 为空");
-            if (Painter == null) throw new Exception("容器绘制时使用的 Painter 为空");
+            if (this.Painter == null) throw new Exception("容器绘制时使用的 Painter 为空");
             if (rectangle.Width <= 0 || rectangle.Height <= 0) return;
 
-            foreach (var control in Controls.Where(
+            foreach (var control in this.Controls.Where(
                 control =>
                 control.Visible &&
                 control.IntersectsWith(rectangle)
                 ))
             {
-                Painter.Paint(graphics, control);
+                this.Painter.Paint(graphics, control);
             }
             //Console.WriteLine("——< 绘制完成>——————");
         }
@@ -452,7 +452,7 @@ namespace LeonDirectUI.Container
         {
             if (this.Disposing || this.IsDisposed) return;
 
-            PaintAll(this.CreateGraphics());
+            this.PaintAll(this.CreateGraphics());
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace LeonDirectUI.Container
         protected void Control_PaintRequired(ControlBase sender, Rectangle rectangle)
         {
             //绘制被挂起，请求也不绘制你，哼！(つД`)
-            if (PaintSuspendCount > 0) return;
+            if (this.PaintSuspendCount > 0) return;
 
             if (this.Disposing || this.IsDisposed)
             {
@@ -477,14 +477,14 @@ namespace LeonDirectUI.Container
             //绘制请求绘制的虚拟控件和与绘制区域有交集的可见虚拟控件
             using (Graphics graphics = this.CreateGraphics())
             {
-                foreach (var control in Controls.Where(
+                foreach (var control in this.Controls.Where(
                     ctl => ctl.Visible &&
                     ctl != sender &&
                     ctl.IntersectsWith(rectangle)))
 
-                    Painter?.Paint(graphics, control);
+                    this.Painter?.Paint(graphics, control);
                 //最后绘制发起请求的虚拟控件
-                Painter?.Paint(graphics, sender);
+                this.Painter?.Paint(graphics, sender);
             }
         }
 
@@ -495,7 +495,7 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected void Control_Dispoing(object sender, EventArgs e)
         {
-            Remove(sender as ControlBase);
+            this.Remove(sender as ControlBase);
         }
 
         /// <summary>
@@ -504,8 +504,8 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
+            this.ResetSize(this.Width, this.Height);
             base.OnSizeChanged(e);
-            ResetSize(this.Width, this.Height);
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace LeonDirectUI.Container
         /// <param name="control">添加的虚拟控件</param>
         protected virtual void OnControlAdded(ControlBase control)
         {
-            ControlAdded?.Invoke(this, control);
+            this.ControlAdded?.Invoke(this, control);
         }
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace LeonDirectUI.Container
         /// <param name="control">移除的虚拟空间</param>
         protected virtual void OnControlRemoved(ControlBase control)
         {
-            ControlRemoved?.Invoke(this, control);
+            this.ControlRemoved?.Invoke(this, control);
         }
 
         /// <summary>
@@ -558,7 +558,7 @@ namespace LeonDirectUI.Container
         protected override void OnClick(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
@@ -577,7 +577,7 @@ namespace LeonDirectUI.Container
         protected override void OnDoubleClick(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
@@ -595,33 +595,33 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
                 ctl.Contains(e.Location));
 
             //激活控件发生变化
-            if (ActiveControl != control)
+            if (this.ActiveControl != control)
             {
-                if (ActiveControl != null)
+                if (this.ActiveControl != null)
                 {
                     //通知之前的激活控件"鼠标离开"
-                    ActiveControl.OnMouseLeave(EventArgs.Empty);
+                    this.ActiveControl.OnMouseLeave(EventArgs.Empty);
                 }
                 //更新激活控件
-                ActiveControl = control;
-                if (ActiveControl != null)
+                this.ActiveControl = control;
+                if (this.ActiveControl != null)
                 {
                     //通知新的激活控件"鼠标进入"和"鼠标移动"
-                    ActiveControl.OnMouseEnter(EventArgs.Empty);
-                    ActiveControl.OnMouseMove(e);
+                    this.ActiveControl.OnMouseEnter(EventArgs.Empty);
+                    this.ActiveControl.OnMouseMove(e);
                 }
             }
             else
             {
-                if (ActiveControl != null)
-                    ActiveControl.OnMouseMove(e);
+                if (this.ActiveControl != null)
+                    this.ActiveControl.OnMouseMove(e);
 
                 base.OnMouseMove(e);
             }
@@ -634,7 +634,7 @@ namespace LeonDirectUI.Container
         protected override void OnMouseHover(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
@@ -652,7 +652,7 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
@@ -697,8 +697,8 @@ namespace LeonDirectUI.Container
 
             if (control != null)
             {
-                ActiveControl = control;
-                ActiveControl.OnMouseEnter(e);
+                this.ActiveControl = control;
+                this.ActiveControl.OnMouseEnter(e);
             }
 
             base.OnMouseEnter(e);
@@ -710,10 +710,10 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (ActiveControl != null)
+            if (this.ActiveControl != null)
             {
-                ActiveControl.OnMouseLeave(e);
-                ActiveControl = null;
+                this.ActiveControl.OnMouseLeave(e);
+                this.ActiveControl = null;
             }
 
             base.OnMouseLeave(e);

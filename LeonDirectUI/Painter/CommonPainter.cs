@@ -29,7 +29,7 @@ namespace LeonDirectUI.Painter
 
             //绘制背景色和图像
             if(control.BackgroundImage!=null || control.BackColor !=Color.Transparent)
-                DrawBackground(
+                PainterBase.DrawBackground(
                     graphics,
                     control.BackgroundImage,
                     control.BackColor,
@@ -38,16 +38,17 @@ namespace LeonDirectUI.Painter
 
             //绘制前置图像
             if(control.Image !=null)
-                DrawImage(
-                graphics,
-                control.Image,
-                control.ImageAlign,
-                control.Rectangle,
-                control.Padding,
-                control.Enabled);
+                PainterBase.DrawImage(
+                    graphics,
+                    control.Image,
+                    control.ImageAlign,
+                    control.Rectangle,
+                    control.Padding,
+                    control.Enabled);
 
+            //绘制文本
             if (!string.IsNullOrEmpty(control.Text))
-                DrawText(
+                PainterBase.DrawText(
                     graphics,
                     control.Text,
                     control.Font,

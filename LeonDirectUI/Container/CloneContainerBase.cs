@@ -16,21 +16,21 @@ namespace LeonDirectUI.Container
         /// </summary>
         public ContainerBase TargetContainer
         {
-            get => _targetContainer;
+            get => this._targetContainer;
             set
             {
-                if (_targetContainer != value)
+                if (this._targetContainer != value)
                 {
-                    if (_targetContainer != null)
+                    if (this._targetContainer != null)
                     {
                         //解除绑定旧容器
-                        DiscloneContainer(_targetContainer);
+                        this.DiscloneContainer(this._targetContainer);
                     }
-                    _targetContainer = value;
-                    if (_targetContainer != null)
+                    this._targetContainer = value;
+                    if (this._targetContainer != null)
                     {
                         //绑定新目标容器
-                        CloneContainer(_targetContainer);
+                        this.CloneContainer(this._targetContainer);
                     }
                 }
             }
@@ -43,14 +43,14 @@ namespace LeonDirectUI.Container
         /// <summary>
         /// 无参构造函数
         /// </summary>
-        private CloneContainerBase() { }
+        private CloneContainerBase() : base() { }
 
         /// <summary>
         /// 构造绑定到目标容器的克隆容器
         /// </summary>
         /// <param name="container"></param>
-        public CloneContainerBase(ContainerBase container) : base()
-            => TargetContainer = container;
+        public CloneContainerBase(ContainerBase container) : this()
+            => this.TargetContainer = container;
 
         #endregion
 
@@ -68,8 +68,8 @@ namespace LeonDirectUI.Container
             this.Size = container.Size;
 
             //订阅目标容器事件以跟随
-            container.HandleDestroyed += TargetContainer_HandleDestroyed;
-            container.SizeChanged += TargetContainer_SizeChanged;
+            container.HandleDestroyed += this.TargetContainer_HandleDestroyed;
+            container.SizeChanged += this.TargetContainer_SizeChanged;
 
             //重复注册虚拟控件
             container.ForEach(control => this.Add(control));
@@ -79,7 +79,7 @@ namespace LeonDirectUI.Container
         /// 解除绑定
         /// </summary>
         public virtual void DiscloneContainer()
-            => DiscloneContainer(_targetContainer);
+            => this.DiscloneContainer(this._targetContainer);
 
         /// <summary>
         /// 解除绑定克隆目标容器
@@ -87,7 +87,7 @@ namespace LeonDirectUI.Container
         /// <param name="container">待解除的容器</param>
         protected virtual void DiscloneContainer(ContainerBase container)
         {
-            if (container == null || container.Disposing || container.IsDisposed) return; 
+            if (container == null || container.Disposing || container.IsDisposed) return;
 
             //解除目标容器绑定
             Clear();
@@ -112,7 +112,7 @@ namespace LeonDirectUI.Container
         private void TargetContainer_HandleDestroyed(object sender, EventArgs e)
         {
             //仅解除克隆绑定
-            DiscloneContainer((sender as ContainerBase));
+            this.DiscloneContainer((sender as ContainerBase));
 
             this.Invalidate();
         }
