@@ -310,6 +310,24 @@ namespace LeonDirectUI.DUIControl
             }
         }
 
+        private ButtonBorderStyle _borderStyle = ButtonBorderStyle.None;
+        /// <summary>
+        /// 边框类型（None : 无边框）
+        /// </summary>
+        [DefaultValue(ButtonBorderStyle.None)]
+        public virtual ButtonBorderStyle BorderStyle
+        {
+            get => this._borderStyle;
+            set
+            {
+                if (this._borderStyle != value)
+                {
+                    this._borderStyle = value;
+                    this.PaintRequired?.Invoke(this, this.Rectangle);
+                }
+            }
+        }
+
         private Padding _padding = new Padding(3, 3, 3, 3);
         /// <summary>
         /// 内边距

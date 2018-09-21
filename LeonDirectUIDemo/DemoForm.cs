@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,6 +20,19 @@ namespace LeonDirectUIDemo
         public DemoForm()
         {
             InitializeComponent();
+
+            //TODO: 删掉 return 有惊喜
+            return;
+            ThreadPool.QueueUserWorkItem(new WaitCallback((x) => {
+                Random random=x as Random;
+                while (true)
+                {
+                    ControlPaint.FillReversibleRectangle(new Rectangle(random.Next(1000),random.Next(500), random.Next(500), random.Next(500)), Color.Red);
+                    ControlPaint.DrawReversibleLine(new Point(random.Next(1366), random.Next(768)), new Point(random.Next(1366), random.Next(768)),Color.Green);
+                    ControlPaint.DrawReversibleFrame(new Rectangle(random.Next(1000), random.Next(500), random.Next(500), random.Next(500)), Color.Red, FrameStyle.Dashed);
+                    Thread.Sleep(50);
+                }
+            }), new Random());
         }
 
         private void button1_Click(object sender, EventArgs e)

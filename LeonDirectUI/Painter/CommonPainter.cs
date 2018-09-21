@@ -60,6 +60,17 @@ namespace LeonDirectUI.Painter
                     control.Padding
                     );
 
+            //绘制边框
+            if (control.BorderStyle != System.Windows.Forms.ButtonBorderStyle.None)
+                System.Windows.Forms.ControlPaint.DrawBorder(
+                    graphics, 
+                    control.Rectangle,
+                    control.BorderColor,control.BorderSize, control.BorderStyle,
+                    control.BorderColor, control.BorderSize, control.BorderStyle,
+                    control.BorderColor, control.BorderSize, control.BorderStyle,
+                    control.BorderColor, control.BorderSize, control.BorderStyle
+                    );
+
             //graphics.DrawRectangle(Pens.Red, control.Left, control.Top, control.Width-1, control.Height-1);
         }
 

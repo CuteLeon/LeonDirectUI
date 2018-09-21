@@ -91,7 +91,10 @@ namespace LeonDirectUIDemo
             TitleLabel.MouseLeave += (s, e) => { TitleLabel.ForeColor = Color.Orange; };
             TitleLabel.MouseDown += (s, e) => { TitleLabel.ForeColor = Color.Chocolate; };
             TitleLabel.MouseUp += (s, e) => { TitleLabel.ForeColor = Color.OrangeRed; };
-            
+            TitleLabel.BorderColor = Color.SkyBlue;
+            TitleLabel.BorderSize = 3;
+            TitleLabel.BorderStyle = ButtonBorderStyle.Dashed;
+
             PreviewImageBox.Name = "预览图像框";
             PreviewImageBox.Text = string.Empty;
             PreviewImageBox.BackColor = Color.DimGray;
