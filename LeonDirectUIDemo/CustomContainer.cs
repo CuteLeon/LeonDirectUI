@@ -195,6 +195,50 @@ namespace LeonDirectUIDemo
 
         #endregion
 
+        #region 设计模式效果
+
+        private ControlBase PrimaryControl;
+        Random random = new Random();
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            //在这里设置需要突出显示的虚拟控件
+            PrimaryControl = this.TitleLabel;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (DesignMode)
+            {
+                //使用斜线遮蔽其他区域
+                ControlPaint.DrawSelectionFrame(
+                    e.Graphics,
+                    true,
+                    new Rectangle(0, 0, this.Width, this.Height),
+                    PrimaryControl?.Rectangle ?? Rectangle.Empty,
+                    Color.Black
+                    );
+
+                //填充点状矩阵
+                //ControlPaint.DrawGrid(
+                //    e.Graphics,
+                //    new Rectangle(0,0,this.Width,this.Height),
+                //    new Size(10,10),Color.Gray);
+
+                ControlPaint.DrawFocusRectangle(e.Graphics, PrimaryControl.Rectangle);
+
+                ControlPaint.FillReversibleRectangle(
+                    new Rectangle(random.Next(1000), random.Next(600), random.Next(500), random.Next(300)), 
+                    Color.Red
+                    );
+            }
+        }
+
+        #endregion
+
     }
 
 }
