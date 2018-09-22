@@ -26,7 +26,8 @@ namespace LeonDirectUI.Container
         /// <summary>
         /// 阻止器计数
         /// </summary>
-        private byte PaintSuspendCount;
+        [ThreadStatic]
+        private volatile byte PaintSuspendCount;
 
         /// <summary>
         /// 挂起绘制
