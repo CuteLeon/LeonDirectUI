@@ -93,6 +93,8 @@ namespace LeonDirectUIDemo
             TitleLabel.MouseUp += (s, e) => { TitleLabel.ForeColor = Color.OrangeRed; };
             TitleLabel.BorderColor = Color.SkyBlue;
             TitleLabel.BorderSize = 3;
+            TitleLabel.MaxSize = new Size(0, 28);
+            TitleLabel.MinSize = new Size(0, 28);
             TitleLabel.BorderStyle = ButtonBorderStyle.Dashed;
 
             PreviewImageBox.Name = "预览图像框";
@@ -181,10 +183,10 @@ namespace LeonDirectUIDemo
             CloseButton.SetSize(Math.Min(width, 28), Math.Min(height, 28));
             CloseButton.SetLocation(width - CloseButton.Width, 0);
 
-            TitleLabel.SetBounds(0, 0, CloseButton.Left, CloseButton.Height);
+            TitleLabel.Width= CloseButton.Left;
 
             PreviewImageBox.SetLocation(0, TitleLabel.Bottom);
-            PreviewImageBox.Height = Math.Max(height - PreviewImageBox.Top, 0);
+            PreviewImageBox.Height = height - PreviewImageBox.Top;
             PreviewImageBox.Width = Math.Min(width, PreviewImageBox.Height);
 
             DescriptionLabel.SetLocation(PreviewImageBox.Right, PreviewImageBox.Top);
@@ -231,7 +233,7 @@ namespace LeonDirectUIDemo
                 ControlPaint.DrawFocusRectangle(e.Graphics, PrimaryControl.Rectangle);
 
                 ControlPaint.FillReversibleRectangle(
-                    new Rectangle(random.Next(1000), random.Next(600), random.Next(500), random.Next(300)), 
+                    new Rectangle(random.Next(1000), random.Next(600), random.Next(500), random.Next(300)),
                     Color.Red
                     );
             }

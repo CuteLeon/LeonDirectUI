@@ -77,9 +77,11 @@ namespace LeonDirectUI.DUIControl
 
                 this._maxSize = value;
 
-                if ((this._maxSize.Width != 0 && this._maxSize.Height != 0) &&
-                    (this._maxSize.Width < this.Width || this._maxSize.Height < this.Height))
-                    this.SetSize(Math.Min(this.Width, value.Width), Math.Min(this.Height, value.Height));
+                if (value.Width != 0 && this.Width > value.Width)
+                    this.Width = value.Width;
+
+                if (value.Height != 0 && this.Height > value.Height)
+                    this.Height = value.Height;
             }
         }
 
@@ -100,9 +102,11 @@ namespace LeonDirectUI.DUIControl
 
                 this._minSize = value;
 
-                if ((this._minSize.Width != 0 && this._minSize.Height != 0) &&
-                    (this._minSize.Width > this.Width || this._minSize.Height > this.Height))
-                    this.SetSize(Math.Max(this.Width, value.Width), Math.Max(this.Height, value.Height));
+                if (value.Width != 0 && this.Width < value.Width)
+                    this.Width = value.Width;
+
+                if (value.Height != 0 && this.Height < value.Height)
+                    this.Height = value.Height;
             }
         }
 

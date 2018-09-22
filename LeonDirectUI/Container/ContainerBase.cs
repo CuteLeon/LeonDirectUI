@@ -19,7 +19,7 @@ namespace LeonDirectUI.Container
     /// </summary>
     public abstract class ContainerBase : Control, Interface.IContainer, IDisposable
     {
-        #region 高频绘制组织器
+        #region 高频绘制阻止器
 
         //TODO: [提醒] [容器子类开发] 大量绘制任务 {开始前使用 SuspendPaint() 挂起绘制、结束后使用 ResumePaint() 恢复绘制} 以避免频繁绘制造成的性能损耗；
 
