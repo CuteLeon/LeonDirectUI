@@ -606,6 +606,20 @@ namespace LeonDirectUI.DUIControl
 
         #endregion
 
+        #region 基础方法
+
+        /// <summary>
+        /// 显示
+        /// </summary>
+        public void Show() => Visible = true;
+
+        /// <summary>
+        /// 隐藏
+        /// </summary>
+        public void Hide() => Visible = false;
+
+        #endregion
+
         #region 区域关系计算
 
         /// <summary>
