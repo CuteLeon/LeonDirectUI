@@ -289,11 +289,11 @@ namespace LeonDirectUI.Painter
             Graphics graphics,
             string text,
             Font font,
-            Color forcolor, 
+            Color forcolor,
             ContentAlignment align,
             bool enabled,
             bool showEllipsis,
-            Rectangle bounds, 
+            Rectangle bounds,
             Padding padding
             )
         {
@@ -303,7 +303,7 @@ namespace LeonDirectUI.Painter
             {
                 //根据内边距调整绘制区域
                 bounds.Offset(padding.Left, padding.Top);
-                bounds.Inflate(-padding.Horizontal,-padding.Vertical);
+                bounds.Inflate(-padding.Horizontal, -padding.Vertical);
                 if (bounds.Width <= 0 || bounds.Height <= 0) return;
 
                 if (enabled)

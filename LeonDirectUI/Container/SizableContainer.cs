@@ -18,7 +18,7 @@ namespace LeonDirectUI.Container
         protected static readonly ContentAlignment AnyLeftAlign = (ContentAlignment)273;
         protected static readonly ContentAlignment AnyTopAlign = (ContentAlignment)7;
         protected static readonly ContentAlignment AnyBottomAlign = (ContentAlignment)1792;
-        
+
         //TODO: [提醒] [自由边框容器使用] 拖动和调整边框均有对应的属性开关，且默认为关闭，需要启用此功能需要赋属性为 true；
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace LeonDirectUI.Container
             }
 
             //恢复鼠标样式为默认样式
-            if(this.Cursor != Cursors.Default)
+            if (this.Cursor != Cursors.Default)
                 this.Cursor = Cursors.Default;
 
             base.OnMouseMove(e);

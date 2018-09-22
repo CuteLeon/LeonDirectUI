@@ -480,11 +480,13 @@ namespace LeonDirectUI.Container
                 foreach (var control in this.Controls.Where(
                     ctl => ctl.Visible &&
                     ctl != sender &&
-                    ctl.IntersectsWith(rectangle)))
-
+                    ctl.IntersectsWith(rectangle))
+                )
                     this.Painter?.Paint(graphics, control);
+
                 //最后绘制发起请求的虚拟控件
-                this.Painter?.Paint(graphics, sender);
+                if (sender.Visible)
+                    this.Painter?.Paint(graphics, sender);
             }
         }
 

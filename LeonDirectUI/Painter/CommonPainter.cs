@@ -28,7 +28,7 @@ namespace LeonDirectUI.Painter
             //Console.WriteLine(control.Name);
 
             //绘制背景色和图像
-            if(control.BackgroundImage!=null || control.BackColor !=Color.Transparent)
+            if (control.BackgroundImage != null || control.BackColor != Color.Transparent)
                 PainterBase.DrawBackground(
                     graphics,
                     control.BackgroundImage,
@@ -37,7 +37,7 @@ namespace LeonDirectUI.Painter
                     control.Rectangle);
 
             //绘制前置图像
-            if(control.Image !=null)
+            if (control.Image != null)
                 PainterBase.DrawImage(
                     graphics,
                     control.Image,
@@ -63,9 +63,9 @@ namespace LeonDirectUI.Painter
             //绘制边框
             if (control.BorderStyle != System.Windows.Forms.ButtonBorderStyle.None)
                 System.Windows.Forms.ControlPaint.DrawBorder(
-                    graphics, 
+                    graphics,
                     control.Rectangle,
-                    control.BorderColor,control.BorderSize, control.BorderStyle,
+                    control.BorderColor, control.BorderSize, control.BorderStyle,
                     control.BorderColor, control.BorderSize, control.BorderStyle,
                     control.BorderColor, control.BorderSize, control.BorderStyle,
                     control.BorderColor, control.BorderSize, control.BorderStyle
