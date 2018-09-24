@@ -79,6 +79,10 @@ namespace LeonDirectUI.Painter
                 //非拉伸，重复绘制平铺
                 case ImageLayout.Tile:
                     {
+                        /* [解决方案] 使用从 Stream 读入并释放 Stream 的图像创建 TextureBrush 时会抛出 '内存不足' 异常
+                         * 解决方案1：不手动释放 Stream；
+                         * 解决方案2：创建 TextureBrush 时传入一个 Rectangle 参数，此参数略小于图像大小（会造成图像显示不全）；
+                         */
                         using (TextureBrush textureBrush = new TextureBrush(backgroundImage, WrapMode.Tile))
                         {
                             //平移对齐绘制起始坐标
