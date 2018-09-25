@@ -1,17 +1,10 @@
-﻿using LeonDirectUI.Container;
-using LeonDirectUI.DUIControl;
-using LeonDirectUI.Interface;
-using LeonDirectUI.Painter;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using LeonDirectUI.Container;
+using LeonDirectUI.DUIControl;
 
 namespace LeonDirectUIDemo
 {
