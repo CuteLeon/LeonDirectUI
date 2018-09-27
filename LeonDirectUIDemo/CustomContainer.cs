@@ -100,7 +100,7 @@ namespace LeonDirectUIDemo
             this.PreviewImageBox.Mouseable = true;
             this.PreviewImageBox.Image = UIResource.white_emoticons_04;
             this.PreviewImageBox.BackgroundImage = UIResource._5_130505152605;
-            this.PreviewImageBox.BackgroundImageLayout = ImageLayout.Zoom;
+            this.PreviewImageBox.BackgroundImageLayout = ImageLayout.Tile;
             this.PreviewImageBox.ImageAlign = ContentAlignment.MiddleCenter;
             this.PreviewImageBox.Click += (s, e) => { Console.WriteLine("点击预览图像区域"); };
             this.PreviewImageBox.MouseDown += (s, e) =>
