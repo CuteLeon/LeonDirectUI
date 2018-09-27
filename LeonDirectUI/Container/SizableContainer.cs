@@ -92,7 +92,7 @@ namespace LeonDirectUI.Container
                 else if (e.X <= 5 && e.Y <= 5)
                     this.SizableBound = ContentAlignment.TopLeft;
                 else if (e.X <= 5 && e.Y >= this.Height - 5)
-                    SizableBound = ContentAlignment.BottomLeft;
+                    this.SizableBound = ContentAlignment.BottomLeft;
                 else if (e.X >= this.Width - 5 && e.Y <= 5)
                     this.SizableBound = ContentAlignment.TopRight;
                 else if (e.X >= this.Width - 5)
@@ -122,8 +122,8 @@ namespace LeonDirectUI.Container
                 {
                     //拖动位置
                     Point cpoint = MousePosition;
-                    int x = cpoint.X - MousePoint.X;
-                    int y = cpoint.Y - MousePoint.Y;
+                    int x = cpoint.X - this.MousePoint.X;
+                    int y = cpoint.Y - this.MousePoint.Y;
                     this.Left += x;
                     this.Top += y;
                     this.MousePoint = cpoint;
@@ -149,8 +149,8 @@ namespace LeonDirectUI.Container
 
                     //调整尺寸
                     Point cpoint = MousePosition;
-                    int x = cpoint.X - MousePoint.X;
-                    int y = cpoint.Y - MousePoint.Y;
+                    int x = cpoint.X - this.MousePoint.X;
+                    int y = cpoint.Y - this.MousePoint.Y;
                     this.MousePoint = cpoint;
 
                     this.SuspendPaint();
@@ -167,7 +167,7 @@ namespace LeonDirectUI.Container
                         this.Top += y;
                         this.Height -= y;
                     }
-                    else if ((SizableBound & SizableContainer.AnyBottomAlign) != (ContentAlignment)0)
+                    else if ((this.SizableBound & SizableContainer.AnyBottomAlign) != (ContentAlignment)0)
                         this.Height += y;
 
                     this.ResumePaint();

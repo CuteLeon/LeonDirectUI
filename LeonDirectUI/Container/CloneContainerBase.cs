@@ -86,7 +86,7 @@ namespace LeonDirectUI.Container
             if (container == null || container.Disposing || container.IsDisposed) return;
 
             //解除目标容器绑定
-            Clear();
+            this.Clear();
         }
 
         #endregion

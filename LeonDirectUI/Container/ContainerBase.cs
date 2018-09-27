@@ -671,7 +671,7 @@ namespace LeonDirectUI.Container
         /// <param name="e"></param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
@@ -690,7 +690,7 @@ namespace LeonDirectUI.Container
         protected override void OnMouseEnter(EventArgs e)
         {
             Point mousePoint = this.PointToClient(MousePosition);
-            ControlBase control = Controls.FirstOrDefault(
+            ControlBase control = this.Controls.FirstOrDefault(
                 ctl => ctl.Visible &&
                 ctl.Enabled &&
                 ctl.Mouseable &&
