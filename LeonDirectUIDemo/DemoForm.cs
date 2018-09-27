@@ -12,25 +12,12 @@ namespace LeonDirectUIDemo
     {
         public DemoForm()
         {
-            InitializeComponent();
-
-            //TODO: 删掉 return 有惊喜
-            return;
-            ThreadPool.QueueUserWorkItem(new WaitCallback((x) => {
-                Random random=x as Random;
-                while (true)
-                {
-                    ControlPaint.FillReversibleRectangle(new Rectangle(random.Next(1000),random.Next(500), random.Next(500), random.Next(500)), Color.Red);
-                    ControlPaint.DrawReversibleLine(new Point(random.Next(1366), random.Next(768)), new Point(random.Next(1366), random.Next(768)),Color.Green);
-                    ControlPaint.DrawReversibleFrame(new Rectangle(random.Next(1000), random.Next(500), random.Next(500), random.Next(500)), Color.Red, FrameStyle.Dashed);
-                    Thread.Sleep(50);
-                }
-            }), new Random());
+            this.InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ShowCloneForm();
+            this.ShowCloneForm();
         }
 
         private void MainContainer_ControlAdded(object sender, ControlBase e)
@@ -67,17 +54,17 @@ namespace LeonDirectUIDemo
             cloneForm.HandleDestroyed += (s, e) => { container.Dispose(); };
 
             //绑定待克隆的目标容器
-            container.CloneContainer(MainContainer);
+            container.CloneContainer(this.MainContainer);
 
             cloneForm.Show();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            while(MainContainer.Controls.Length>0)
-                MainContainer[0].Dispose();
+            while(this.MainContainer.Controls.Length>0)
+                this.MainContainer[0].Dispose();
 
-            MainContainer.Dispose();
+            this.MainContainer.Dispose();
         }
     }
 }
