@@ -32,15 +32,15 @@
 绘制器基类，用于提供基础的底层绘制方法；
 可继承此类定制喜欢的界面风格；
 
-![image](./README/解决方案结构.png)
+![](https://raw.github.com/CuteLeon/LeonDirectUI/master/README/解决方案结构.png)
 
 ***
 > ### 演示效果：
 
 > * 自定义响应式布局：
 
-![image](./README/截图1.png)
+![](https://raw.github.com/CuteLeon/LeonDirectUI/master/README/截图1.png)
 
 > * 克隆容器与目标容器实时响应事件：
 
-![image](./README/截图2.png)
+![](https://raw.github.com/CuteLeon/LeonDirectUI/master/README/截图2.png)
